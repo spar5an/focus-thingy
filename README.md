@@ -22,3 +22,9 @@ $$ \lim_{\text{distractions} \to 0} \left( \text{Productivity} \right) = \infty 
 ## 🌲 Disclaimer
 
 This is a passion project and fan tribute. *Firewatch*, its aesthetic, and its Original Soundtrack are the property of Campo Santo / Valve.
+
+-----------------
+
+
+This is spar5an, I couldnt be bothered to fork this from someone so I just made some changes and re uploaded so I could download it onto all my devices, im 70% sure the previous dude vibe coded it
+Heres the og link https://github.com/Cosmosynth/Firewatch-Clock-Trials
