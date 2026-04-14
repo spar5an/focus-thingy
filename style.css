@@ -1,0 +1,2222 @@
+/* ================================================================
+   CSS CUSTOM PROPERTIES
+   ================================================================ */
+:root {
+    --font-display: 'Anton', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-handwritten: 'Caveat', cursive;
+    --transition-theme: 0.6s ease;
+}
+
+/* ---------- SUNSET ---------- */
+body[data-theme="sunset"] {
+    --text-primary: #fde8d0;
+    --text-secondary: rgba(253, 232, 208, 0.7);
+    --date-color: #d4a574;
+    --accent: #ff9e64;
+    --accent-hover: #ffb386;
+    --widget-bg: rgba(40, 10, 20, 0.4);
+    --widget-border: rgba(253, 232, 208, 0.15);
+    --btn-hover-bg: rgba(255, 158, 100, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+    --particle-color: rgba(255, 180, 100, 0.6);
+}
+
+/* ---------- NIGHT ---------- */
+body[data-theme="night"] {
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --date-color: #8fb8d4;
+    --accent: #FFD700;
+    --accent-hover: #ffe44d;
+    --widget-bg: rgba(0, 0, 0, 0.5);
+    --widget-border: rgba(255, 255, 255, 0.1);
+    --btn-hover-bg: rgba(255, 215, 0, 0.12);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.6);
+    --particle-color: rgba(255, 215, 0, 0.5);
+}
+
+/* ---------- EVENING ---------- */
+body[data-theme="evening"] {
+    --text-primary: #e8d5f5;
+    --text-secondary: rgba(232, 213, 245, 0.65);
+    --date-color: #b89cc8;
+    --accent: #c084fc;
+    --accent-hover: #d4a5ff;
+    --widget-bg: rgba(30, 10, 50, 0.45);
+    --widget-border: rgba(200, 160, 255, 0.15);
+    --btn-hover-bg: rgba(192, 132, 252, 0.12);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+    --particle-color: rgba(192, 132, 252, 0.5);
+}
+
+/* ---------- ABSTRACT MOUNTAINS ---------- */
+body[data-theme="abstract-mountains"] {
+    --text-primary: #fde8d0;
+    --text-secondary: rgba(253, 232, 208, 0.7);
+    --date-color: #d4a574;
+    --accent: #e05a5a;
+    --accent-hover: #ff7676;
+    --widget-bg: rgba(20, 10, 15, 0.5);
+    --widget-border: rgba(253, 232, 208, 0.15);
+    --btn-hover-bg: rgba(224, 90, 90, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+    --particle-color: rgba(224, 90, 90, 0.5);
+}
+
+/* ---------- BLACK SUNSET ---------- */
+body[data-theme="black-sunset"] {
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --date-color: #d8c8b8;
+    --accent: #ff7a00;
+    --accent-hover: #ffa34d;
+    --widget-bg: rgba(0, 0, 0, 0.6);
+    --widget-border: rgba(255, 255, 255, 0.1);
+    --btn-hover-bg: rgba(255, 122, 0, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.6);
+    --particle-color: rgba(255, 122, 0, 0.5);
+}
+
+/* ---------- CAMPO SANTO ---------- */
+body[data-theme="campo-santo"] {
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --date-color: #ffe8b3;
+    --accent: #ffd166;
+    --accent-hover: #ffe499;
+    --widget-bg: rgba(40, 20, 0, 0.45);
+    --widget-border: rgba(255, 255, 255, 0.15);
+    --btn-hover-bg: rgba(255, 209, 102, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+    --particle-color: rgba(255, 209, 102, 0.6);
+}
+
+/* ---------- FOREST GREEN ---------- */
+body[data-theme="forest-green"] {
+    --text-primary: #e0f8e0;
+    --text-secondary: rgba(224, 248, 224, 0.65);
+    --date-color: #a3d9b8;
+    --accent: #66cc99;
+    --accent-hover: #8ce6b3;
+    --widget-bg: rgba(10, 30, 20, 0.45);
+    --widget-border: rgba(224, 248, 224, 0.15);
+    --btn-hover-bg: rgba(102, 204, 153, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+    --particle-color: rgba(102, 204, 153, 0.5);
+}
+
+/* ---------- FOREST NIGHT ---------- */
+body[data-theme="forest-night"] {
+    --text-primary: #e0e0f8;
+    --text-secondary: rgba(224, 224, 248, 0.65);
+    --date-color: #b3cce6;
+    --accent: #4da6ff;
+    --accent-hover: #80bfff;
+    --widget-bg: rgba(10, 15, 30, 0.55);
+    --widget-border: rgba(224, 224, 248, 0.15);
+    --btn-hover-bg: rgba(77, 166, 255, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+    --particle-color: rgba(77, 166, 255, 0.5);
+}
+
+/* ---------- PENCIL ---------- */
+body[data-theme="pencil"] {
+    --text-primary: #e0e0e0;
+    --text-secondary: rgba(224, 224, 224, 0.65);
+    --date-color: #a0a0a0;
+    --accent: #bbbbbb;
+    --accent-hover: #e0e0e0;
+    --widget-bg: rgba(10, 10, 10, 0.4);
+    --widget-border: rgba(224, 224, 224, 0.15);
+    --btn-hover-bg: rgba(187, 187, 187, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+    --particle-color: rgba(187, 187, 187, 0.6);
+}
+
+/* ---------- CABIN VIEW ---------- */
+body[data-theme="cabin-view"] {
+    --text-primary: #fde8d0;
+    --text-secondary: rgba(253, 232, 208, 0.7);
+    --date-color: #d4a574;
+    --accent: #ffb347;
+    --accent-hover: #ffd180;
+    --widget-bg: rgba(30, 15, 5, 0.5);
+    --widget-border: rgba(253, 232, 208, 0.15);
+    --btn-hover-bg: rgba(255, 179, 71, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+    --particle-color: rgba(255, 179, 71, 0.6);
+}
+
+/* ---------- LAKESIDE SUNRISE ---------- */
+body[data-theme="lakeside-sunrise"] {
+    --text-primary: #fde8d0;
+    --text-secondary: rgba(253, 232, 208, 0.7);
+    --date-color: #d4a574;
+    --accent: #ff9999;
+    --accent-hover: #ffb3b3;
+    --widget-bg: rgba(40, 20, 25, 0.45);
+    --widget-border: rgba(253, 232, 208, 0.15);
+    --btn-hover-bg: rgba(255, 153, 153, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+    --particle-color: rgba(255, 153, 153, 0.6);
+}
+
+/* ---------- LAKESIDE SUNSET ---------- */
+body[data-theme="lakeside-sunset"] {
+    --text-primary: #fde8d0;
+    --text-secondary: rgba(253, 232, 208, 0.7);
+    --date-color: #d4a574;
+    --accent: #ff6b6b;
+    --accent-hover: #ff9999;
+    --widget-bg: rgba(35, 10, 10, 0.5);
+    --widget-border: rgba(253, 232, 208, 0.15);
+    --btn-hover-bg: rgba(255, 107, 107, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+    --particle-color: rgba(255, 107, 107, 0.6);
+}
+
+/* ---------- MINIMAL SUNRISE ---------- */
+body[data-theme="minimal-sunrise"] {
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --date-color: #e6ccff;
+    --accent: #ffb6c1;
+    --accent-hover: #ffd0d6;
+    --widget-bg: rgba(50, 20, 40, 0.4);
+    --widget-border: rgba(255, 255, 255, 0.15);
+    --btn-hover-bg: rgba(255, 182, 193, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.3);
+    --particle-color: rgba(255, 182, 193, 0.5);
+}
+
+/* ---------- VALLEY ---------- */
+body[data-theme="valley"] {
+    --text-primary: #e8d5f5;
+    --text-secondary: rgba(232, 213, 245, 0.65);
+    --date-color: #b89cc8;
+    --accent: #c084fc;
+    --accent-hover: #d4a5ff;
+    --widget-bg: rgba(30, 10, 40, 0.45);
+    --widget-border: rgba(232, 213, 245, 0.15);
+    --btn-hover-bg: rgba(192, 132, 252, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+    --particle-color: rgba(192, 132, 252, 0.5);
+}
+
+/* ---------- BOAT SEA RED ---------- */
+body[data-theme="boat-sea-red"] {
+    --text-primary: #fde8d0;
+    --text-secondary: rgba(253, 232, 208, 0.7);
+    --date-color: #d4a574;
+    --accent: #ff4d4d;
+    --accent-hover: #ff8080;
+    --widget-bg: rgba(40, 10, 10, 0.55);
+    --widget-border: rgba(253, 232, 208, 0.15);
+    --btn-hover-bg: rgba(255, 77, 77, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+    --particle-color: rgba(255, 77, 77, 0.5);
+}
+
+/* ---------- HOLLOW KNIGHT — DARK FOREST ---------- */
+body[data-theme="hollow-forest"] {
+    --text-primary: #e0d8f8;
+    --text-secondary: rgba(224, 216, 248, 0.65);
+    --date-color: #a898d8;
+    --accent: #7b6fd4;
+    --accent-hover: #9e94e8;
+    --widget-bg: rgba(8, 6, 20, 0.62);
+    --widget-border: rgba(224, 216, 248, 0.14);
+    --btn-hover-bg: rgba(123, 111, 212, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.7);
+    --particle-color: rgba(140, 120, 255, 0.5);
+}
+
+/* ---------- HOLLOW KNIGHT — COLOSSEUM ---------- */
+body[data-theme="hollow-colosseum"] {
+    --text-primary: #d8d4c0;
+    --text-secondary: rgba(216, 212, 192, 0.65);
+    --date-color: #b0a878;
+    --accent: #c8b870;
+    --accent-hover: #ddd090;
+    --widget-bg: rgba(20, 18, 12, 0.58);
+    --widget-border: rgba(216, 212, 192, 0.14);
+    --btn-hover-bg: rgba(200, 184, 112, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.65);
+    --particle-color: rgba(200, 184, 112, 0.5);
+}
+
+/* ---------- HOLLOW KNIGHT — GREENPATH ---------- */
+body[data-theme="hollow-greenpath"] {
+    --text-primary: #c8f0e0;
+    --text-secondary: rgba(200, 240, 224, 0.65);
+    --date-color: #80c8a8;
+    --accent: #5ec8a0;
+    --accent-hover: #84dcc0;
+    --widget-bg: rgba(4, 16, 12, 0.58);
+    --widget-border: rgba(200, 240, 224, 0.14);
+    --btn-hover-bg: rgba(94, 200, 160, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.6);
+    --particle-color: rgba(94, 200, 160, 0.5);
+}
+
+/* ---------- HOLLOW KNIGHT — ABYSS ---------- */
+body[data-theme="hollow-abyss"] {
+    --text-primary: #d0e8f8;
+    --text-secondary: rgba(208, 232, 248, 0.65);
+    --date-color: #88b8d8;
+    --accent: #4a90b8;
+    --accent-hover: #72b4d8;
+    --widget-bg: rgba(4, 10, 20, 0.6);
+    --widget-border: rgba(208, 232, 248, 0.14);
+    --btn-hover-bg: rgba(74, 144, 184, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.65);
+    --particle-color: rgba(74, 144, 184, 0.5);
+}
+
+/* ---------- HOLLOW KNIGHT — RADIANCE ---------- */
+body[data-theme="hollow-radiance"] {
+    --text-primary: #f0e0c8;
+    --text-secondary: rgba(240, 224, 200, 0.65);
+    --date-color: #c89060;
+    --accent: #c87830;
+    --accent-hover: #e09850;
+    --widget-bg: rgba(18, 8, 4, 0.68);
+    --widget-border: rgba(240, 224, 200, 0.14);
+    --btn-hover-bg: rgba(200, 120, 48, 0.15);
+    --clock-shadow: 0 4px 40px rgba(0, 0, 0, 0.7);
+    --particle-color: rgba(200, 120, 48, 0.55);
+}
+
+/* ================================================================
+   BACKGROUND LAYERS — 3-layer crossfade
+   ================================================================ */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    transition: color var(--transition-theme);
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.bg-layer {
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    will-change: opacity;
+}
+
+.bg-sunset {
+    background-image: url('wallpapers/Firewatch/sunset-bg.jpg');
+}
+
+.bg-night {
+    background-image: url('wallpapers/Firewatch/night-bg.jpg');
+}
+
+.bg-evening {
+    background-image: url('wallpapers/Firewatch/evening-bg.png');
+}
+
+body[data-theme="sunset"] .bg-sunset {
+    opacity: 1;
+}
+
+body[data-theme="night"] .bg-night {
+    opacity: 1;
+}
+
+body[data-theme="evening"] .bg-evening {
+    opacity: 1;
+}
+
+.bg-abstract-mountains { background-image: url('wallpapers/Firewatch/Abstract-mountains-wallpapers.jpg'); }
+.bg-black-sunset { background-image: url('wallpapers/Firewatch/Firewatch-black-sunset.jpg'); }
+.bg-campo-santo { background-image: url('wallpapers/Firewatch/Firewatch-campo-santo.png'); }
+.bg-forest-green { background-image: url('wallpapers/Firewatch/Firewatch-forest-green.jpg'); }
+.bg-forest-night { background-image: url('wallpapers/Firewatch/Firewatch-forest-night.png'); }
+.bg-pencil { background-image: url('wallpapers/Firewatch/Firewatch-pencil.png'); }
+.bg-cabin-view { background-image: url('wallpapers/Firewatch/Firewatch-wallpapers-cabin-view.jpg'); }
+.bg-lakeside-sunrise { background-image: url('wallpapers/Firewatch/Lakeside-sunrise.png'); }
+.bg-lakeside-sunset { background-image: url('wallpapers/Firewatch/Lakeside-sunset.png'); }
+.bg-minimal-sunrise { background-image: url('wallpapers/Firewatch/Minimal-sunrise-lake.jpg'); }
+.bg-valley { background-image: url('wallpapers/Firewatch/Valley.png'); }
+.bg-boat-sea-red { background-image: url('wallpapers/Firewatch/boat-sea-red.jpg'); }
+.bg-hollow-forest      { background-image: url('wallpapers/Hollow Knight/Hollow-Knight-Desktop-Wallpaper.jpg'); }
+.bg-hollow-colosseum   { background-image: url('wallpapers/Hollow Knight/811256.jpg'); }
+.bg-hollow-greenpath   { background-image: url('wallpapers/Hollow Knight/aesthetic-hollow-knight-eaujejpm8bxn5d6q.jpg'); }
+.bg-hollow-abyss       { background-image: url('wallpapers/Hollow Knight/wallpaperflare.com_wallpaper.jpg'); }
+.bg-hollow-radiance    { background-image: url('wallpapers/Hollow Knight/wallpaperflare.com_wallpaper (1).jpg'); }
+
+body[data-theme="abstract-mountains"] .bg-abstract-mountains,
+body[data-theme="black-sunset"] .bg-black-sunset,
+body[data-theme="campo-santo"] .bg-campo-santo,
+body[data-theme="forest-green"] .bg-forest-green,
+body[data-theme="forest-night"] .bg-forest-night,
+body[data-theme="pencil"] .bg-pencil,
+body[data-theme="cabin-view"] .bg-cabin-view,
+body[data-theme="lakeside-sunrise"] .bg-lakeside-sunrise,
+body[data-theme="lakeside-sunset"] .bg-lakeside-sunset,
+body[data-theme="minimal-sunrise"] .bg-minimal-sunrise,
+body[data-theme="valley"] .bg-valley,
+body[data-theme="boat-sea-red"] .bg-boat-sea-red,
+body[data-theme="hollow-forest"] .bg-hollow-forest,
+body[data-theme="hollow-colosseum"] .bg-hollow-colosseum,
+body[data-theme="hollow-greenpath"] .bg-hollow-greenpath,
+body[data-theme="hollow-abyss"] .bg-hollow-abyss,
+body[data-theme="hollow-radiance"] .bg-hollow-radiance {
+    opacity: 1;
+}
+
+/* ================================================================
+   PARTICLE CANVAS
+   ================================================================ */
+#particle-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* ================================================================
+   WELCOME SCREEN
+   ================================================================ */
+.welcome-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    opacity: 1;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.welcome-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.03);
+}
+
+.welcome-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: welcomeFadeUp 0.8s 0.3s ease forwards;
+}
+
+.welcome-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: #ff9e64;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.welcome-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    color: #fde8d0;
+    letter-spacing: 0.06em;
+    text-align: center;
+    opacity: 0;
+    animation: welcomeFadeUp 0.8s 0.5s ease forwards;
+}
+
+.welcome-sub {
+    font-family: var(--font-handwritten);
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    color: rgba(253, 232, 208, 0.6);
+    margin-top: 0.3rem;
+    text-align: center;
+    opacity: 0;
+    animation: welcomeFadeUp 0.8s 0.7s ease forwards;
+}
+
+.welcome-line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff9e64, transparent);
+    margin: 1.5rem 0;
+    opacity: 0;
+    animation: welcomeFadeUp 0.6s 0.9s ease forwards;
+}
+
+.welcome-btn {
+    margin-top: 0.5rem;
+    padding: 0.7rem 2.4rem;
+    border: 1px solid rgba(255, 158, 100, 0.4);
+    border-radius: 2rem;
+    background: rgba(255, 158, 100, 0.08);
+    color: #fde8d0;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0;
+    animation: welcomeFadeUp 0.8s 1.1s ease forwards;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.welcome-btn:hover {
+    background: rgba(255, 158, 100, 0.2);
+    border-color: #ff9e64;
+    transform: translateY(-2px);
+}
+
+@keyframes welcomeFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Welcome credit */
+.welcome-credit {
+    position: absolute;
+    bottom: 2.5rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: rgba(253, 232, 208, 0.35);
+    opacity: 0;
+    animation: welcomeFadeUp 0.8s 1.5s ease forwards;
+}
+
+.welcome-credit-name {
+    font-family: var(--font-handwritten);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #ff9e64;
+    letter-spacing: 0.02em;
+}
+
+/* ================================================================
+   MAIN LAYOUT
+   ================================================================ */
+.dashboard {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: justify-content 0.5s ease;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Clock positions */
+.dashboard[data-clock-pos="center"] {
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard[data-clock-pos="top"] {
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 6rem;
+}
+
+.dashboard[data-clock-pos="bottom-left"] {
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 0 0 3rem 3rem;
+}
+
+/* ================================================================
+   MUSIC STATUS WIDGET (Top-left, Shared for OST & Lofi)
+   ================================================================ */
+.music-status-widget {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--widget-bg);
+    border: 1px solid var(--widget-border);
+    border-radius: 1rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: opacity 0.5s ease, border-color 0.5s ease, background var(--transition-theme);
+    z-index: 10;
+    opacity: 0.6;
+}
+
+.music-status-widget.playing {
+    opacity: 1;
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(255, 158, 100, 0.1);
+}
+
+.music-status-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    flex-shrink: 0;
+}
+
+.music-status-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.lofi-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-width: 180px;
+}
+
+.lofi-status {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+}
+
+.lofi-scroll-container {
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    /* Allow children to sit side-by-side */
+    width: 100%;
+    /* Keep max width contained */
+    position: relative;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.lofi-track-name {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    padding-right: 3rem;
+    /* Spacing between the original and duplicate */
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/*
+   We wrap both spans in the animation.
+   When playing, BOTH spans slide to the left precisely the width of ONE span.
+*/
+.music-status-widget.playing .lofi-track-name {
+    animation: lofiScroll 15s linear infinite;
+}
+
+@keyframes lofiScroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.music-panel.lofi-mode .ost-now-playing,
+.music-panel.lofi-mode .ost-progress-wrap,
+.music-panel.lofi-mode .ost-tracklist {
+    display: none;
+}
+
+.music-panel.lofi-mode .lofi-tracklist {
+    display: block;
+    /* Overrides the default display:none */
+}
+
+.music-panel.hk-mode .ost-tracklist {
+    display: none;
+}
+
+.music-panel.hk-mode .hk-tracklist {
+    display: block;
+    /* Overrides the default display:none */
+}
+
+/* ================================================================
+   MUSIC MODE TOGGLE
+   ================================================================ */
+.music-mode-toggle {
+    display: flex;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.8rem;
+    padding: 3px;
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--widget-border);
+}
+
+.mode-btn {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border-radius: 0.6rem;
+    transition: all 0.3s ease;
+}
+
+.mode-btn.active {
+    background: var(--accent);
+    color: #1a1a2e;
+}
+
+.panel.music-panel .panel-title {
+    margin-top: 0.5rem;
+}
+
+/* ================================================================
+   CLOCK & DATE
+   ================================================================ */
+.clock-container {
+    text-align: center;
+    user-select: none;
+    cursor: grab;
+    transition: transform 0.5s cubic-bezier(.4, 0, .2, 1), opacity 0.5s ease;
+}
+
+.clock-container:active {
+    cursor: grabbing;
+}
+
+/* Free-drag mode — clock becomes fixed-positioned */
+.clock-container.clock-dragging {
+    position: fixed;
+    z-index: 50;
+    cursor: grabbing;
+    transition: none;
+}
+
+.clock-time {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 14vw, 12rem);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-shadow: var(--clock-shadow);
+    transition: color var(--transition-theme), text-shadow var(--transition-theme), font-size 0.5s ease;
+}
+
+/* When clock is at top, use text-stroke for readability */
+.dashboard[data-clock-pos="top"] .clock-time {
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.15);
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5), 0 0 80px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard[data-clock-pos="bottom-left"] .clock-time {
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5), 0 0 80px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard[data-clock-pos="bottom-left"] .clock-container {
+    text-align: left;
+}
+
+.clock-separator {
+    display: inline-block;
+}
+
+.clock-ampm {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 3vw, 1.6rem);
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-left: 0.5rem;
+    vertical-align: super;
+    display: inline-block;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.4s ease, transform 0.4s ease, color var(--transition-theme);
+}
+
+.clock-ampm.hidden-ampm {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    width: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.clock-date {
+    font-size: clamp(0.85rem, 2vw, 1.15rem);
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--date-color);
+    margin-top: 0.6rem;
+    transition: color var(--transition-theme);
+}
+
+/* ================================================================
+   TOOLBAR — bottom center
+   ================================================================ */
+.toolbar {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    background: var(--widget-bg);
+    border: 1px solid var(--widget-border);
+    border-radius: 1rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    z-index: 10;
+    transition: background var(--transition-theme), border-color var(--transition-theme);
+}
+
+.toolbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: none;
+    border-radius: 0.7rem;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.25s ease, background 0.25s ease, transform 0.15s ease;
+    white-space: nowrap;
+}
+
+.toolbar-btn:hover {
+    color: var(--accent-hover);
+    background: var(--btn-hover-bg);
+    transform: translateY(-1px);
+}
+
+.toolbar-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.toolbar-btn.active {
+    color: var(--accent);
+    background: var(--btn-hover-bg);
+}
+
+.toolbar-btn svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.toolbar-divider {
+    width: 1px;
+    height: 1.4rem;
+    background: var(--widget-border);
+    margin: 0 0.15rem;
+    flex-shrink: 0;
+}
+
+/* ================================================================
+   PANELS (Pomodoro, Stopwatch, Music)
+   ================================================================ */
+.panel {
+    position: fixed;
+    background: var(--widget-bg);
+    border: 1px solid var(--widget-border);
+    border-radius: 1.2rem;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    padding: 1.4rem 1.6rem;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px) scale(0.97);
+    transition: opacity 0.3s ease, transform 0.3s ease, background var(--transition-theme), border-color var(--transition-theme);
+    min-width: 240px;
+}
+
+.panel.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.panel-title {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+}
+
+/* Pomodoro & Stopwatch shared */
+.timer-display {
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.04em;
+}
+
+.timer-label {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+}
+
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.timer-btn {
+    padding: 0.45rem 1.1rem;
+    border: 1px solid var(--widget-border);
+    border-radius: 2rem;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.timer-btn:hover {
+    color: var(--accent-hover);
+    border-color: var(--accent);
+    background: var(--btn-hover-bg);
+}
+
+.timer-btn.primary {
+    background: var(--btn-hover-bg);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* Pomodoro progress ring */
+.pomo-ring-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.6rem;
+}
+
+.pomo-ring {
+    transform: rotate(-90deg);
+}
+
+.pomo-ring-bg {
+    fill: none;
+    stroke: var(--widget-border);
+    stroke-width: 4;
+}
+
+.pomo-ring-fill {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear, stroke var(--transition-theme);
+}
+
+/* Pomodoro session dots */
+.pomo-sessions {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+}
+
+.pomo-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--widget-border);
+    transition: background 0.3s ease;
+}
+
+.pomo-dot.filled {
+    background: var(--accent);
+}
+
+/* --- Pomodoro header (title + icon buttons) --- */
+.pomo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+
+.pomo-header .panel-title {
+    margin-bottom: 0;
+}
+
+.pomo-header-btns {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.pomo-icon-btn {
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.25s ease, background 0.25s ease, transform 0.15s ease;
+}
+
+.pomo-icon-btn:hover {
+    color: var(--accent-hover);
+    background: var(--btn-hover-bg);
+    transform: scale(1.1);
+}
+
+.pomo-icon-btn.active {
+    color: var(--accent);
+}
+
+.pomo-icon-btn.muted {
+    opacity: 0.4;
+}
+
+.pomo-icon-btn svg {
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* --- Presets row --- */
+.pomo-presets {
+    display: flex;
+    gap: 0.35rem;
+    margin-bottom: 0.8rem;
+    justify-content: center;
+}
+
+.pomo-preset {
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--widget-border);
+    border-radius: 2rem;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+    white-space: nowrap;
+}
+
+.pomo-preset:hover {
+    color: var(--accent-hover);
+    border-color: var(--accent);
+    background: var(--btn-hover-bg);
+    transform: translateY(-1px);
+}
+
+.pomo-preset.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--btn-hover-bg);
+}
+
+/* --- Custom settings (collapsible) --- */
+.pomo-custom-settings {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(.4, 0, .2, 1), margin 0.35s ease;
+    margin-bottom: 0;
+}
+
+.pomo-custom-settings.open {
+    max-height: 220px;
+    margin-bottom: 0.8rem;
+}
+
+.pomo-setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.35rem 0;
+}
+
+.pomo-setting-row+.pomo-setting-row {
+    border-top: 1px solid var(--widget-border);
+}
+
+.pomo-setting-row label {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.pomo-setting-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.pomo-stepper {
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--widget-border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    line-height: 1;
+    padding: 0;
+}
+
+.pomo-stepper:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--btn-hover-bg);
+}
+
+.pomo-setting-input {
+    width: 2.8rem;
+    text-align: center;
+    border: 1px solid var(--widget-border);
+    border-radius: 0.4rem;
+    background: rgba(0, 0, 0, 0.15);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.25rem 0.1rem;
+    outline: none;
+    transition: border-color 0.25s ease;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.pomo-setting-input::-webkit-outer-spin-button,
+.pomo-setting-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.pomo-setting-input:focus {
+    border-color: var(--accent);
+}
+
+.pomo-setting-unit {
+    font-family: var(--font-body);
+    font-size: 0.55rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+.pomo-apply-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.4rem 0;
+    border: 1px solid var(--accent);
+    border-radius: 2rem;
+    background: var(--btn-hover-bg);
+    color: var(--accent);
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease;
+}
+
+.pomo-apply-btn:hover {
+    background: var(--accent);
+    color: #1a1a2e;
+    transform: translateY(-1px);
+}
+
+/* ================================================================
+   MUSIC PLAYER — Firewatch OST
+   ================================================================ */
+.music-panel {
+    bottom: 5.5rem;
+    right: 2rem;
+    min-width: 300px;
+    max-width: 340px;
+}
+
+/* Now-playing row */
+.ost-now-playing {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.75rem;
+}
+
+.ost-visualizer {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.music-bar {
+    width: 3px;
+    background: var(--accent);
+    border-radius: 1px;
+    transition: background var(--transition-theme);
+}
+
+.music-bar.playing {
+    animation: musicBounce 0.8s ease-in-out infinite alternate;
+}
+
+.music-bar:nth-child(1) {
+    height: 6px;
+    animation-delay: 0s;
+}
+
+.music-bar:nth-child(2) {
+    height: 12px;
+    animation-delay: 0.15s;
+}
+
+.music-bar:nth-child(3) {
+    height: 8px;
+    animation-delay: 0.3s;
+}
+
+.music-bar:nth-child(4) {
+    height: 16px;
+    animation-delay: 0.1s;
+}
+
+.music-bar:nth-child(5) {
+    height: 10px;
+    animation-delay: 0.25s;
+}
+
+@keyframes musicBounce {
+    0% {
+        height: 4px;
+    }
+
+    100% {
+        height: 20px;
+    }
+}
+
+.ost-track-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.ost-track-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ost-track-number {
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+}
+
+/* ---- Progress bar ---- */
+.ost-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.ost-time {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    min-width: 2.2rem;
+    text-align: center;
+    letter-spacing: 0.04em;
+}
+
+.ost-progress-bar {
+    position: relative;
+    flex: 1;
+    height: 4px;
+    background: var(--widget-border);
+    border-radius: 2px;
+    cursor: pointer;
+    overflow: visible;
+}
+
+.ost-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    width: 0%;
+    transition: background var(--transition-theme);
+}
+
+.ost-progress-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.15s ease, background var(--transition-theme);
+    box-shadow: 0 0 6px var(--accent);
+}
+
+.ost-progress-bar:hover .ost-progress-thumb,
+.ost-progress-bar:active .ost-progress-thumb {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* ---- Main controls ---- */
+.ost-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.ost-ctrl-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.25s ease, background 0.25s ease, transform 0.15s ease;
+}
+
+.ost-ctrl-btn:hover {
+    color: var(--accent-hover);
+    background: var(--btn-hover-bg);
+    transform: scale(1.1);
+}
+
+.ost-ctrl-btn.active {
+    color: var(--accent);
+}
+
+/* Repeat-one badge */
+.ost-ctrl-btn.repeat-one::after {
+    content: '1';
+    position: absolute;
+    font-size: 0.45rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 0.15rem;
+}
+
+.ost-ctrl-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Play button (larger, with border) */
+.ost-play-btn {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--widget-border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.15s ease;
+}
+
+.ost-play-btn:hover {
+    background: var(--btn-hover-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: scale(1.08);
+}
+
+.ost-play-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    stroke: none;
+}
+
+/* ---- Volume ---- */
+.ost-volume {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.ost-volume svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: var(--text-secondary);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--widget-border);
+    outline: none;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    cursor: pointer;
+}
+
+/* ---- Track-list toggle ---- */
+.ost-tracklist-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.4rem 0;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.25s ease;
+}
+
+.ost-tracklist-toggle:hover {
+    color: var(--accent-hover);
+}
+
+.ost-tracklist-toggle svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.3s ease;
+}
+
+.ost-tracklist-toggle.open svg {
+    transform: rotate(180deg);
+}
+
+/* ---- Track list ---- */
+.ost-tracklist,
+.lofi-tracklist,
+.hk-tracklist {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    border-radius: 0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    margin-top: 1rem;
+}
+
+.lofi-tracklist,
+.hk-tracklist {
+    display: none;
+    /* Hidden by default, shown in their respective mode */
+}
+
+.ost-tracklist.open,
+.lofi-tracklist.open,
+.hk-tracklist.open {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+/* Custom Scrollbar for tracklists */
+.ost-tracklist::-webkit-scrollbar,
+.lofi-tracklist::-webkit-scrollbar,
+.hk-tracklist::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ost-tracklist::-webkit-scrollbar-thumb,
+.lofi-tracklist::-webkit-scrollbar-thumb,
+.hk-tracklist::-webkit-scrollbar-thumb {
+    background: rgba(255, 158, 100, 0.3);
+    border-radius: 10px;
+}
+
+.ost-tracklist-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ost-tracklist-item:hover {
+    background: var(--btn-hover-bg);
+}
+
+.ost-tracklist-item.active {
+    background: var(--btn-hover-bg);
+    color: var(--accent);
+}
+
+.ost-tracklist-item.active .ost-tl-num {
+    color: var(--accent);
+}
+
+.ost-tl-num {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 1.3rem;
+    letter-spacing: 0.04em;
+}
+
+.ost-tl-title {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ================================================================
+   SETTINGS (theme & clock position) — top-right
+   ================================================================ */
+.settings-area {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.settings-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--widget-border);
+    border-radius: 2rem;
+    background: var(--widget-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+}
+
+.settings-btn:hover {
+    color: var(--accent-hover);
+    border-color: var(--accent);
+    background: var(--btn-hover-bg);
+    transform: translateY(-1px);
+}
+
+.settings-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.settings-btn svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ================================================================
+   PANEL POSITIONS
+   ================================================================ */
+.pomodoro-panel {
+    bottom: 5.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px) scale(0.97);
+}
+
+.pomodoro-panel.visible {
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.stopwatch-panel {
+    bottom: 5.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px) scale(0.97);
+}
+
+.stopwatch-panel.visible {
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+/* ================================================================
+   RESPONSIVENESS
+   ================================================================ */
+
+/* ---------- Tablets & small laptops ---------- */
+@media (max-width: 768px) {
+    .weather {
+        top: 1rem;
+        left: 1rem;
+        padding: 0.6rem 1rem;
+        gap: 0.5rem;
+    }
+
+    .weather-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .weather-temp {
+        font-size: 1rem;
+    }
+
+    .weather-condition {
+        font-size: 0.65rem;
+    }
+
+    .settings-area {
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .toolbar {
+        bottom: 1rem;
+        gap: 0.2rem;
+        padding: 0.35rem 0.5rem;
+    }
+
+    .toolbar-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0rem;
+        gap: 0;
+    }
+
+    .toolbar-btn svg {
+        width: 1.1rem;
+        height: 1.1rem;
+    }
+
+    /* Panels become near-full-width */
+    .panel {
+        left: 0.75rem !important;
+        right: 0.75rem !important;
+        transform: translateY(12px) scale(0.97) !important;
+        min-width: unset;
+        max-width: unset;
+    }
+
+    .panel.visible {
+        transform: translateY(0) scale(1) !important;
+    }
+
+    .dashboard[data-clock-pos="top"] {
+        padding-top: 5rem;
+    }
+
+    .dashboard[data-clock-pos="bottom-left"] {
+        padding: 0 0 6rem 1.5rem;
+    }
+
+    .bottom-right-controls {
+        bottom: 1rem;
+        right: 1rem;
+    }
+}
+
+/* ---------- Phone screens ---------- */
+@media (max-width: 480px) {
+
+    /* Weather widget — compact */
+    .weather {
+        top: 0.6rem;
+        left: 0.6rem;
+        padding: 0.4rem 0.7rem;
+        border-radius: 0.75rem;
+        gap: 0.4rem;
+    }
+
+    .weather-icon {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    .weather-temp {
+        font-size: 0.9rem;
+    }
+
+    .weather-condition {
+        font-size: 0.55rem;
+    }
+
+    /* Clock — fill screen */
+    .clock-time {
+        font-size: clamp(3.5rem, 20vw, 6rem);
+        letter-spacing: 0.02em;
+    }
+
+    .clock-ampm {
+        font-size: clamp(0.75rem, 2.5vw, 1rem);
+        margin-left: 0.3rem;
+    }
+
+    .clock-date {
+        font-size: clamp(0.65rem, 2.5vw, 0.85rem);
+        letter-spacing: 0.12em;
+    }
+
+    /* Music widget — prevent overlap with settings */
+    .music-status-widget {
+        top: 0.6rem;
+        left: 0.6rem;
+        max-width: calc(50vw - 1rem);
+        padding: 0.5rem 0.8rem;
+        gap: 0.5rem;
+        border-radius: 0.75rem;
+    }
+
+    .lofi-info {
+        max-width: 100px;
+    }
+
+    /* Settings — icon-only */
+    .settings-area {
+        top: 0.6rem;
+        right: 0.6rem;
+        gap: 0.25rem;
+    }
+
+    .settings-btn {
+        padding: 0.45rem;
+        font-size: 0rem;
+        min-width: 36px;
+        min-height: 36px;
+    }
+
+    .settings-btn span {
+        display: none;
+    }
+
+    .settings-btn svg {
+        width: 1.1rem;
+        height: 1.1rem;
+    }
+
+    /* ============================================================
+       COMPACT CENTERED TOOLBAR
+       ============================================================ */
+    .toolbar {
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        gap: 0.15rem;
+        padding: 0.4rem 0.6rem;
+        border-radius: 1rem;
+        transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s ease,
+                    background var(--transition-theme), border-color var(--transition-theme);
+    }
+
+    .toolbar-btn {
+        padding: 0.5rem 0.7rem;
+        font-size: 0;
+        gap: 0;
+        min-width: 44px;
+        min-height: 44px;
+        border-radius: 0.8rem;
+    }
+
+    .toolbar-btn svg {
+        width: 1.15rem;
+        height: 1.15rem;
+    }
+
+    .toolbar-btn span {
+        display: none;
+    }
+
+    .toolbar-divider {
+        height: 1.4rem;
+        margin: 0 0.1rem;
+    }
+
+    /* ============================================================
+       SHOW FULLSCREEN ON PHONES & STACK
+       ============================================================ */
+    .fullscreen-btn {
+        display: flex;
+        width: 2.375rem; /* Match width of the 12/24 toggle including its padding */
+        height: 2.375rem;
+        border-radius: 10px;
+    }
+
+    .bottom-right-controls {
+        position: fixed;
+        bottom: 5rem;
+        right: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        z-index: 10;
+        transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s ease;
+    }
+
+    .clock-format-toggle {
+        flex-direction: column;
+        border-radius: 10px;
+        padding: 3px;
+    }
+
+    .format-label {
+        width: 2rem;
+        height: 1.8rem;
+        font-size: 0.75rem;
+        border-radius: 7px;
+    }
+
+    .format-slider {
+        width: 2rem;
+        height: 1.8rem;
+        top: 3px;
+        left: 3px;
+        border-radius: 7px;
+        /* Override horizontal slide — use vertical on mobile */
+        transform: translateY(0%);
+    }
+
+    .format-slider.right {
+        transform: translateY(100%);
+    }
+
+    /* ============================================================
+       PANEL OVERLAY — dim backdrop behind open panels
+       ============================================================ */
+    body.panel-open::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 15;
+        opacity: 1;
+        animation: overlayFadeIn 0.25s ease;
+        pointer-events: auto;
+    }
+
+    @keyframes overlayFadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* ============================================================
+       BOTTOM-SHEET PANELS
+       ============================================================ */
+    .panel {
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        border-radius: 1.4rem 1.4rem 0 0 !important;
+        transform: translateY(100%) !important;
+        min-width: unset;
+        max-width: unset;
+        padding: 1.2rem 1.2rem !important;
+        padding-top: 0.5rem !important;
+        padding-bottom: calc(1.4rem + env(safe-area-inset-bottom)) !important;
+        max-height: 75vh;
+        max-height: 75dvh;
+        overflow-y: auto;
+        z-index: 25;
+        transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s ease,
+                    background var(--transition-theme), border-color var(--transition-theme);
+        will-change: transform;
+    }
+
+    /* Drag handle — visual swipe affordance */
+    .panel::before {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        margin: 0.2rem auto 1rem;
+        flex-shrink: 0;
+    }
+
+    .panel.visible {
+        transform: translateY(0) !important;
+    }
+
+    /* Panel being swiped — disable normal transition */
+    .panel.swiping {
+        transition: none !important;
+    }
+
+    /* Music panel specific tweaks */
+    .music-panel {
+        max-width: unset;
+    }
+
+    .ost-controls {
+        gap: 0.8rem;
+    }
+
+    .ost-ctrl-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .ost-play-btn {
+        width: 52px;
+        height: 52px;
+    }
+
+    .ost-tracklist.open,
+    .hk-tracklist.open {
+        max-height: 180px;
+    }
+
+    .ost-tracklist-item {
+        padding: 0.55rem 0.5rem;
+    }
+
+    /* Pomodoro panel tweaks */
+    .pomo-ring-container svg {
+        width: 80px;
+        height: 80px;
+    }
+
+    .timer-display {
+        font-size: 2.4rem;
+    }
+
+    .timer-btn {
+        padding: 0.55rem 1.4rem;
+        font-size: 0.72rem;
+        min-height: 38px;
+    }
+
+    .pomo-preset {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.66rem;
+        min-height: 32px;
+    }
+
+    /* ============================================================
+       HIDE TOOLBAR + CONTROLS WHEN PANEL IS OPEN
+       ============================================================ */
+    body.panel-open .toolbar {
+        transform: translateX(-50%) translateY(calc(100% + 1rem));
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    body.panel-open .bottom-right-controls {
+        transform: translateY(calc(100% + 1rem));
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* ============================================================
+       CLOCK POSITIONS — phones
+       ============================================================ */
+    .dashboard[data-clock-pos="top"] {
+        padding-top: 4rem;
+    }
+
+    .dashboard[data-clock-pos="bottom-left"] {
+        padding: 0 0 5.5rem 1rem;
+    }
+
+    .dashboard[data-clock-pos="bottom-left"] .clock-time {
+        font-size: clamp(2.5rem, 15vw, 5rem);
+    }
+}
+
+/* ================================================================
+   BOTTOM-RIGHT CONTROLS (Fullscreen + 12/24h toggle)
+   ================================================================ */
+.bottom-right-controls {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+/* ---- Fullscreen Button ---- */
+.fullscreen-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 1px solid var(--widget-border);
+    border-radius: 10px;
+    background: var(--widget-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease, transform 0.2s ease;
+    padding: 0;
+}
+
+.fullscreen-btn:hover {
+    color: var(--accent-hover);
+    border-color: var(--accent);
+    background: var(--btn-hover-bg);
+    transform: translateY(-1px);
+}
+
+.fullscreen-btn:active {
+    transform: translateY(0) scale(0.95);
+}
+
+.fullscreen-btn svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ---- 12/24 HOUR TOGGLE ---- */
+.clock-format-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    background: var(--widget-bg);
+    border: 1px solid var(--widget-border);
+    border-radius: 10px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: background var(--transition-theme), border-color var(--transition-theme);
+    overflow: hidden;
+}
+
+.format-label {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2rem;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    user-select: none;
+}
+
+.format-label.active {
+    color: var(--text-primary);
+}
+
+.format-label:hover:not(.active) {
+    color: var(--text-primary);
+}
+
+.format-slider {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 2.4rem;
+    height: 2rem;
+    background: var(--accent);
+    border-radius: 8px;
+    z-index: 1;
+    opacity: 0.2;
+    box-shadow: 0 0 12px var(--accent);
+    transition: transform 0.35s cubic-bezier(.4, 0, .2, 1),
+        background var(--transition-theme),
+        box-shadow var(--transition-theme),
+        opacity var(--transition-theme);
+}
+
+.format-slider.right {
+    transform: translateX(100%);
+}
+
+/* ================================================================
+   SEO CONTENT — visually hidden, accessible to crawlers
+   ================================================================ */
+.seo-content {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Reset h1/p inside welcome overlay so semantic tags don't change visual */
+.welcome-overlay h1.welcome-title {
+    margin: 0;
+    padding: 0;
+}
+
+.welcome-overlay p.welcome-sub {
+    margin: 0;
+    margin-top: 0.3rem;
+    padding: 0;
+}
+
+/* ================================================================
+   UTILITY
+   ================================================================ */
+.hidden {
+    display: none !important;
+}
