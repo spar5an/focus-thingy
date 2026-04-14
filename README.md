@@ -28,3 +28,6 @@ This is a passion project and fan tribute. *Firewatch*, its aesthetic, and its O
 
 This is spar5an, I couldnt be bothered to fork this from someone so I just made some changes and re uploaded so I could download it onto all my devices, im 70% sure the previous dude vibe coded it
 Heres the og link https://github.com/Cosmosynth/Firewatch-Clock-Trials
+
+I added hollowknight stuff to it
+
