@@ -75,6 +75,7 @@
             "Study Pomodoro Timer",
             "Study Clock with 12/24 hour modes",
             "Study Timer / Stopwatch",
+            "Deep Focus Session Tracker with interruption logging and CSV export",
             "Full Firewatch OST Player",
             "Dynamic Firewatch Themes",
             "Ambient Particle Effects"
@@ -285,6 +286,16 @@
                 <span>Stopwatch</span>
             </button>
             <div class="toolbar-divider"></div>
+            <button class="toolbar-btn" id="btn-focus" aria-label="Focus tracker">
+                <svg viewBox="0 0 24 24">
+                    <title>Track Deep Focus Sessions</title>
+                    <circle cx="12" cy="12" r="9" />
+                    <circle cx="12" cy="12" r="4" />
+                    <circle cx="12" cy="12" r="1" />
+                </svg>
+                <span>Focus</span>
+            </button>
+            <div class="toolbar-divider"></div>
             <button class="toolbar-btn" id="btn-music" aria-label="Firewatch OST">
                 <svg viewBox="0 0 24 24">
                     <title>Play Firewatch OST Soundtrack</title>
@@ -394,6 +405,74 @@
             </div>
             <div id="sw-laps"
                 style="margin-top:0.7rem;max-height:100px;overflow-y:auto;font-size:0.7rem;color:var(--text-secondary);letter-spacing:0.05em;">
+            </div>
+        </div>
+
+        <!-- ====== FOCUS TRACKER PANEL ====== -->
+        <div class="panel focus-panel" id="focus-panel">
+            <div class="focus-header">
+                <div class="panel-title">Focus Tracker</div>
+                <button class="pomo-icon-btn" id="focus-close" aria-label="Close focus tracker" title="Close">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="5" y1="5" x2="19" y2="19" />
+                        <line x1="19" y1="5" x2="5" y2="19" />
+                    </svg>
+                </button>
+            </div>
+
+            <input type="text" id="focus-label-input" class="focus-label-input" maxlength="60"
+                placeholder="What are you focusing on? (optional)" />
+
+            <div class="timer-display focus-display" id="focus-display">00:00:00</div>
+            <div class="timer-label" id="focus-state" aria-live="polite">Ready</div>
+
+            <div class="timer-controls">
+                <button class="timer-btn primary" id="focus-start">Start Focus</button>
+                <button class="timer-btn" id="focus-stop" disabled>Stop Focus</button>
+            </div>
+            <button class="focus-interrupt-btn" id="focus-interrupt" disabled>
+                <svg viewBox="0 0 24 24">
+                    <polygon points="13 2 4 14 11 14 10 22 20 10 13 10 13 2" />
+                </svg>
+                <span>Momentary Interruption</span>
+            </button>
+
+            <div class="focus-divider"></div>
+
+            <div class="focus-stat-grid">
+                <div class="focus-stat">
+                    <span class="focus-stat-key">Today</span>
+                    <span class="focus-stat-value" id="focus-stat-today">0m</span>
+                </div>
+                <div class="focus-stat">
+                    <span class="focus-stat-key">Sessions</span>
+                    <span class="focus-stat-value" id="focus-stat-sessions">0</span>
+                </div>
+                <div class="focus-stat">
+                    <span class="focus-stat-key">Last 7 Days</span>
+                    <span class="focus-stat-value" id="focus-stat-week">0m</span>
+                </div>
+                <div class="focus-stat">
+                    <span class="focus-stat-key">Avg Session</span>
+                    <span class="focus-stat-value" id="focus-stat-avg">—</span>
+                </div>
+            </div>
+            <div class="focus-intr-line" id="focus-stat-intr">No interruptions today</div>
+
+            <div class="focus-divider"></div>
+
+            <div class="focus-chart-head">
+                <span>Focus per day — last 14 days</span>
+                <span class="focus-chart-peak" id="focus-chart-peak">—</span>
+            </div>
+            <div class="focus-chart" id="focus-chart"></div>
+
+            <div class="focus-divider"></div>
+
+            <div class="focus-export-row">
+                <button class="focus-mini-btn" id="focus-export-csv">Export CSV</button>
+                <button class="focus-mini-btn" id="focus-export-json">Export JSON</button>
+                <button class="focus-mini-btn focus-mini-danger" id="focus-clear">Clear</button>
             </div>
         </div>
 

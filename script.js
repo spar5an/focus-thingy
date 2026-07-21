@@ -186,9 +186,11 @@ const panels = {
     music: document.getElementById('music-panel'),
 };
 
+/* The focus panel is deliberately NOT in `panels` — it is allowed to stay
+   open alongside any of the mutually-exclusive panels above. */
 function closeAllPanels() {
     Object.values(panels).forEach(p => p.classList.remove('visible'));
-    document.querySelectorAll('.toolbar-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.toolbar-btn:not(#btn-focus)').forEach(b => b.classList.remove('active'));
     document.body.classList.remove('panel-open');
 }
 
@@ -230,7 +232,8 @@ document.addEventListener('click', (e) => {
     const THRESHOLD = 80; // px to trigger dismiss
 
     function getVisiblePanel() {
-        return document.querySelector('.panel.visible');
+        // Focus panel is a top-anchored card on mobile — never swipe-dismissed
+        return document.querySelector('.panel.visible:not(.focus-panel)');
     }
 
     document.addEventListener('touchstart', (e) => {
@@ -242,6 +245,9 @@ document.addEventListener('click', (e) => {
         // Only start drag if touch is on the panel itself (not on interactive children deep inside)
         const touch = e.touches[0];
         const target = e.target;
+
+        // Touches on the focus panel must never drag the sheet underneath it
+        if (target.closest('.focus-panel')) return;
 
         // Allow drag from the panel drag-handle area (top ~40px) or panel background
         const panelRect = panel.getBoundingClientRect();
@@ -1272,14 +1278,22 @@ animateParticles();
    KEYBOARD SHORTCUTS (bonus feature)
    ============================================================= */
 document.addEventListener('keydown', (e) => {
+    // Never fire shortcuts while typing in a field — otherwise "t" cycles the
+    // theme, "s" opens the stopwatch, etc. while entering a focus label.
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
+
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+
     if (e.key === 't' || e.key === 'T') document.getElementById('btn-theme').click();
     if (e.key === 'm' || e.key === 'M') document.getElementById('btn-clock-pos').click();
     if (e.key === 'p' || e.key === 'P') togglePanel('pomodoro');
     if (e.key === 's' || e.key === 'S') togglePanel('stopwatch');
     if (e.key === 'o' || e.key === 'O') togglePanel('music');
+    if (e.key === 'd' || e.key === 'D') toggleFocusPanel();
     if (e.key === 'f' || e.key === 'F') document.getElementById('btn-fullscreen').click();
-    // Spacebar toggles play/pause (only if no input is focused)
-    if (e.key === ' ' && document.activeElement.tagName !== 'INPUT') {
+    // Spacebar toggles play/pause
+    if (e.key === ' ') {
         e.preventDefault();
         ostPlayBtn.click();
     }
@@ -1320,3 +1334,407 @@ document.addEventListener('fullscreenchange', updateFullscreenIcon);
 document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
 document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
 document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
+
+/* =============================================================
+   FOCUS TRACKER
+   Records deep-focus sessions independently of the Pomodoro, with
+   momentary-interruption markers. Persisted to localStorage so the
+   log survives refreshes and can be exported later.
+   ============================================================= */
+const FOCUS_KEY = 'fw-focus-log-v1';
+const FOCUS_STALE_MS = 6 * 60 * 60 * 1000;  // a session left open longer than this is abandoned
+const FOCUS_CHART_DAYS = 14;
+const FOCUS_CHART_MAX_H = 46;               // px — chart box is 52px tall
+
+const focusPanel = document.getElementById('focus-panel');
+const btnFocus = document.getElementById('btn-focus');
+const focusDisplayEl = document.getElementById('focus-display');
+const focusStateEl = document.getElementById('focus-state');
+const focusLabelInput = document.getElementById('focus-label-input');
+const focusStartBtn = document.getElementById('focus-start');
+const focusStopBtn = document.getElementById('focus-stop');
+const focusInterruptBtn = document.getElementById('focus-interrupt');
+const focusChartEl = document.getElementById('focus-chart');
+const focusPeakEl = document.getElementById('focus-chart-peak');
+const focusClearBtn = document.getElementById('focus-clear');
+
+let focusStore = { version: 1, lastLabel: '', sessions: [] };
+let focusStorageOK = true;
+let focusTick = null;
+let focusTickCount = 0;
+
+/* --- Persistence --- */
+function loadFocusStore() {
+    try {
+        const raw = localStorage.getItem(FOCUS_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.sessions)) {
+            focusStore = {
+                version: 1,
+                lastLabel: typeof parsed.lastLabel === 'string' ? parsed.lastLabel : '',
+                sessions: parsed.sessions
+                    .filter(s => s && typeof s.start === 'number')
+                    .map(s => ({
+                        id: s.id || s.start,
+                        start: s.start,
+                        end: typeof s.end === 'number' ? s.end : null,
+                        label: typeof s.label === 'string' ? s.label : '',
+                        interruptions: Array.isArray(s.interruptions) ? s.interruptions : [],
+                        abandoned: !!s.abandoned,
+                    }))
+                    .sort((a, b) => a.start - b.start),
+            };
+        }
+    } catch (e) {
+        // Private mode / disabled storage — fall back to in-memory only
+        console.warn('Focus log unavailable, running in memory:', e);
+        focusStorageOK = false;
+    }
+}
+
+function saveFocusStore() {
+    if (!focusStorageOK) return;
+    try {
+        localStorage.setItem(FOCUS_KEY, JSON.stringify(focusStore));
+    } catch (e) {
+        console.warn('Focus log could not be saved:', e);
+        focusStorageOK = false;
+    }
+}
+
+/* --- Helpers --- */
+function activeFocusSession() {
+    const last = focusStore.sessions[focusStore.sessions.length - 1];
+    return (last && last.end === null && !last.abandoned) ? last : null;
+}
+
+function focusDuration(s, now) {
+    if (s.abandoned) return 0;
+    const end = s.end === null ? (now || Date.now()) : s.end;
+    return Math.max(0, end - s.start);
+}
+
+function fmtFocusClock(ms) {
+    const t = Math.floor(Math.max(0, ms) / 1000);
+    const h = Math.floor(t / 3600);
+    const m = Math.floor((t % 3600) / 60);
+    const s = t % 60;
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function fmtFocusDuration(ms) {
+    const mins = Math.round(Math.max(0, ms) / 60000);
+    if (mins < 60) return `${mins}m`;
+    return `${Math.floor(mins / 60)}h ${mins % 60}m`;
+}
+
+function focusStartOfDay(ts) {
+    const d = new Date(ts);
+    d.setHours(0, 0, 0, 0);
+    return d.getTime();
+}
+
+function fmtFocusDate(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function fmtFocusTime(d) {
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+}
+
+/* --- Actions --- */
+function startFocus() {
+    if (activeFocusSession()) return;
+    const now = Date.now();
+    const label = focusLabelInput.value.trim();
+    focusStore.lastLabel = label;
+    focusStore.sessions.push({
+        id: now, start: now, end: null,
+        label, interruptions: [], abandoned: false,
+    });
+    saveFocusStore();
+    startFocusTick();
+    syncFocusUI();
+}
+
+function stopFocus() {
+    const s = activeFocusSession();
+    if (!s) return;
+    s.end = Date.now();
+    saveFocusStore();
+    stopFocusTick();
+    syncFocusUI();
+}
+
+function markInterruption() {
+    const s = activeFocusSession();
+    if (!s) return;
+    s.interruptions.push(Date.now());
+    saveFocusStore();
+    renderFocusLive();
+    // Brief visual confirmation — the button is tapped in a hurry
+    focusInterruptBtn.classList.add('logged');
+    setTimeout(() => focusInterruptBtn.classList.remove('logged'), 350);
+}
+
+function startFocusTick() {
+    if (focusTick) return;
+    focusTickCount = 0;
+    focusTick = setInterval(() => {
+        renderFocusLive();
+        renderFocusStats();
+        // Chart only needs the occasional refresh while a session runs
+        if (++focusTickCount % 60 === 0) renderFocusChart();
+    }, 1000);
+}
+
+function stopFocusTick() {
+    clearInterval(focusTick);
+    focusTick = null;
+}
+
+/* --- Stats --- */
+function computeFocusStats() {
+    const now = Date.now();
+    const todayStart = focusStartOfDay(now);
+    const weekStart = focusStartOfDay(now - 6 * 86400000);
+
+    let todayMs = 0, weekMs = 0, todaySessions = 0, todayIntr = 0;
+    focusStore.sessions.forEach(s => {
+        if (s.abandoned) return;
+        const dur = focusDuration(s, now);
+        if (s.start >= weekStart) weekMs += dur;
+        if (s.start >= todayStart) {
+            todayMs += dur;
+            todaySessions++;
+            todayIntr += s.interruptions.length;
+        }
+    });
+
+    return {
+        todayMs, weekMs, todaySessions, todayIntr,
+        avgMs: todaySessions ? todayMs / todaySessions : 0,
+        rate: todayMs > 0 ? todayIntr / (todayMs / 3600000) : 0,
+    };
+}
+
+function focusDailyTotals(days) {
+    const now = Date.now();
+    const buckets = [];
+    for (let i = days - 1; i >= 0; i--) {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        d.setDate(d.getDate() - i);
+        const next = new Date(d);
+        next.setDate(next.getDate() + 1);
+        buckets.push({ start: d.getTime(), end: next.getTime(), date: new Date(d), ms: 0 });
+    }
+    // A session counts toward the day it started on
+    focusStore.sessions.forEach(s => {
+        if (s.abandoned) return;
+        const b = buckets.find(b => s.start >= b.start && s.start < b.end);
+        if (b) b.ms += focusDuration(s, now);
+    });
+    return buckets;
+}
+
+/* --- Rendering --- */
+function focusIdleStateText() {
+    for (let i = focusStore.sessions.length - 1; i >= 0; i--) {
+        const s = focusStore.sessions[i];
+        if (s.abandoned || s.end === null) continue;
+        const n = s.interruptions.length;
+        return `Last: ${fmtFocusDuration(s.end - s.start)}` +
+            (n ? ` · ${n} interruption${n === 1 ? '' : 's'}` : ' · uninterrupted');
+    }
+    return 'Ready';
+}
+
+function renderFocusLive() {
+    const s = activeFocusSession();
+    if (!s) return;
+    const n = s.interruptions.length;
+    focusDisplayEl.textContent = fmtFocusClock(focusDuration(s));
+    focusStateEl.textContent = n
+        ? `Recording · ${n} interruption${n === 1 ? '' : 's'}`
+        : 'Recording';
+}
+
+function renderFocusStats() {
+    const st = computeFocusStats();
+    document.getElementById('focus-stat-today').textContent = fmtFocusDuration(st.todayMs);
+    document.getElementById('focus-stat-week').textContent = fmtFocusDuration(st.weekMs);
+    document.getElementById('focus-stat-sessions').textContent = String(st.todaySessions);
+    document.getElementById('focus-stat-avg').textContent = st.todaySessions ? fmtFocusDuration(st.avgMs) : '—';
+
+    const intrEl = document.getElementById('focus-stat-intr');
+    if (!st.todaySessions) {
+        intrEl.textContent = 'No focus sessions logged today';
+    } else if (st.todayIntr === 0) {
+        intrEl.textContent = 'No interruptions today — clean run';
+    } else {
+        intrEl.textContent = `${st.todayIntr} interruption${st.todayIntr === 1 ? '' : 's'} today · ${st.rate.toFixed(1)}/hr`;
+    }
+}
+
+function renderFocusChart() {
+    const buckets = focusDailyTotals(FOCUS_CHART_DAYS);
+    const max = buckets.reduce((m, b) => Math.max(m, b.ms), 0);
+
+    focusChartEl.innerHTML = '';
+    buckets.forEach((b, i) => {
+        const bar = document.createElement('div');
+        bar.className = 'focus-chart-bar';
+        if (i === buckets.length - 1) bar.classList.add('today');
+        if (b.ms <= 0) {
+            bar.classList.add('empty');
+            bar.style.height = '2px';
+        } else {
+            bar.style.height = `${Math.max(3, Math.round((b.ms / max) * FOCUS_CHART_MAX_H))}px`;
+        }
+        const day = b.date.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+        bar.title = `${day} · ${b.ms > 0 ? fmtFocusDuration(b.ms) : 'no focus'}`;
+        focusChartEl.appendChild(bar);
+    });
+
+    focusPeakEl.textContent = max > 0 ? `peak ${fmtFocusDuration(max)}` : 'no data yet';
+}
+
+function syncFocusUI() {
+    const running = !!activeFocusSession();
+
+    focusStartBtn.disabled = running;
+    focusStopBtn.disabled = !running;
+    focusInterruptBtn.disabled = !running;
+    focusLabelInput.disabled = running;
+    focusStateEl.classList.toggle('recording', running);
+    btnFocus.classList.toggle('running', running);
+
+    if (running) {
+        renderFocusLive();
+    } else {
+        focusDisplayEl.textContent = '00:00:00';
+        focusStateEl.textContent = focusIdleStateText();
+    }
+
+    renderFocusStats();
+    renderFocusChart();
+}
+
+/* --- Export --- */
+function focusCsvCell(v) {
+    const s = String(v == null ? '' : v);
+    return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function downloadFocusFile(text, filename, mime) {
+    const blob = new Blob([text], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function exportFocusCSV() {
+    const head = ['session_id', 'date', 'start_time', 'end_time', 'duration_minutes',
+        'label', 'interruption_count', 'interruption_offsets_minutes', 'abandoned'];
+
+    const rows = focusStore.sessions.map(s => {
+        const startDate = new Date(s.start);
+        const offsets = s.interruptions
+            .map(t => ((t - s.start) / 60000).toFixed(1))
+            .join(' ');
+        return [
+            s.id,
+            fmtFocusDate(startDate),
+            fmtFocusTime(startDate),
+            s.end === null ? '' : fmtFocusTime(new Date(s.end)),
+            s.end === null ? '' : ((s.end - s.start) / 60000).toFixed(2),
+            s.label,
+            s.interruptions.length,
+            offsets,
+            s.abandoned ? 'yes' : 'no',
+        ].map(focusCsvCell).join(',');
+    });
+
+    // BOM so Excel reads UTF-8 labels correctly
+    downloadFocusFile('﻿' + [head.join(','), ...rows].join('\r\n'),
+        `focus-log-${fmtFocusDate(new Date())}.csv`, 'text/csv;charset=utf-8;');
+}
+
+function exportFocusJSON() {
+    downloadFocusFile(JSON.stringify(focusStore, null, 2),
+        `focus-log-${fmtFocusDate(new Date())}.json`, 'application/json');
+}
+
+/* --- Clear (two-step, no browser dialog) --- */
+let focusClearArmed = null;
+
+function clearFocusHistory() {
+    if (!focusClearArmed) {
+        focusClearArmed = setTimeout(() => {
+            focusClearArmed = null;
+            focusClearBtn.textContent = 'Clear';
+            focusClearBtn.classList.remove('armed');
+        }, 3000);
+        focusClearBtn.textContent = 'Sure?';
+        focusClearBtn.classList.add('armed');
+        return;
+    }
+
+    clearTimeout(focusClearArmed);
+    focusClearArmed = null;
+    focusClearBtn.textContent = 'Clear';
+    focusClearBtn.classList.remove('armed');
+
+    stopFocusTick();
+    focusStore.sessions = [];
+    saveFocusStore();
+    syncFocusUI();
+}
+
+/* --- Panel toggle — independent of the mutually-exclusive panels --- */
+function toggleFocusPanel(force) {
+    const visible = typeof force === 'boolean' ? force : !focusPanel.classList.contains('visible');
+    focusPanel.classList.toggle('visible', visible);
+    btnFocus.classList.toggle('active', visible);
+}
+
+btnFocus.addEventListener('click', () => toggleFocusPanel());
+document.getElementById('focus-close').addEventListener('click', () => toggleFocusPanel(false));
+focusStartBtn.addEventListener('click', startFocus);
+focusStopBtn.addEventListener('click', stopFocus);
+focusInterruptBtn.addEventListener('click', markInterruption);
+document.getElementById('focus-export-csv').addEventListener('click', exportFocusCSV);
+document.getElementById('focus-export-json').addEventListener('click', exportFocusJSON);
+focusClearBtn.addEventListener('click', clearFocusHistory);
+
+// Enter in the label field starts the session
+focusLabelInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); startFocus(); }
+});
+
+/* --- Boot --- */
+(function initFocusTracker() {
+    loadFocusStore();
+    focusLabelInput.value = focusStore.lastLabel || '';
+
+    // Recover a session left running by a refresh or crash
+    const last = focusStore.sessions[focusStore.sessions.length - 1];
+    if (last && last.end === null && !last.abandoned) {
+        if (Date.now() - last.start > FOCUS_STALE_MS) {
+            // Too old to trust — flag it rather than inventing an end time
+            last.abandoned = true;
+            saveFocusStore();
+        } else {
+            startFocusTick();
+        }
+    }
+
+    syncFocusUI();
+})();
