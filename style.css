@@ -845,6 +845,19 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
     background: var(--btn-hover-bg);
 }
 
+/* Focus session in progress — visible even with the panel closed */
+.toolbar-btn.running {
+    color: var(--accent);
+}
+
+.toolbar-btn.running svg {
+    animation: focusPulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toolbar-btn.running svg { animation: none; }
+}
+
 .toolbar-btn svg {
     width: 1rem;
     height: 1rem;
@@ -1690,6 +1703,301 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
     transform: translateX(-50%) translateY(0) scale(1);
 }
 
+/* Focus panel sits bottom-LEFT so it can stay open alongside the
+   centred Pomodoro / Stopwatch / Music panels. */
+.focus-panel {
+    bottom: 5.5rem;
+    left: 1.5rem;
+    width: 272px;
+    min-width: 272px;
+}
+
+/* ================================================================
+   FOCUS TRACKER
+   ================================================================ */
+.focus-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.focus-header .panel-title {
+    margin-bottom: 0.9rem;
+}
+
+.focus-label-input {
+    width: 100%;
+    border: 1px solid var(--widget-border);
+    border-radius: 0.5rem;
+    background: rgba(0, 0, 0, 0.15);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    padding: 0.4rem 0.6rem;
+    margin-bottom: 0.9rem;
+    outline: none;
+    transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.focus-label-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.55;
+}
+
+.focus-label-input:focus {
+    border-color: var(--accent);
+}
+
+.focus-display {
+    font-size: 2.4rem;
+    margin-bottom: 0.5rem;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Recording indicator — pulsing accent dot before the state text */
+#focus-state {
+    margin-bottom: 0.9rem;
+}
+
+#focus-state.recording::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 0.4rem;
+    vertical-align: middle;
+    animation: focusPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes focusPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.35; transform: scale(0.8); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #focus-state.recording::before { animation: none; }
+}
+
+.timer-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.timer-btn:disabled:hover {
+    color: var(--text-secondary);
+    border-color: var(--widget-border);
+    background: transparent;
+}
+
+.timer-btn.primary:disabled:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--btn-hover-bg);
+}
+
+/* Momentary interruption — full width, the button you hit fast */
+.focus-interrupt-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+    border: 1px dashed var(--widget-border);
+    border-radius: 2rem;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+}
+
+.focus-interrupt-btn svg {
+    width: 0.8rem;
+    height: 0.8rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.focus-interrupt-btn:not(:disabled):hover {
+    color: var(--accent-hover);
+    border-color: var(--accent);
+    background: var(--btn-hover-bg);
+}
+
+.focus-interrupt-btn:not(:disabled):active {
+    transform: scale(0.97);
+}
+
+.focus-interrupt-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+/* Flash feedback when an interruption is logged */
+.focus-interrupt-btn.logged {
+    color: var(--accent);
+    border-style: solid;
+    border-color: var(--accent);
+    background: var(--btn-hover-bg);
+}
+
+.focus-divider {
+    height: 1px;
+    background: var(--widget-border);
+    margin: 0.9rem 0;
+}
+
+/* --- Stats --- */
+.focus-stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 0.8rem;
+}
+
+.focus-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.focus-stat-key {
+    font-family: var(--font-body);
+    font-size: 0.55rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.focus-stat-value {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+.focus-intr-line {
+    margin-top: 0.7rem;
+    font-family: var(--font-body);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+}
+
+/* --- 14-day chart --- */
+.focus-chart-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.55rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.focus-chart-peak {
+    white-space: nowrap;
+    opacity: 0.85;
+}
+
+.focus-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 52px;
+    /* baseline rule — recessive */
+    border-bottom: 1px solid var(--widget-border);
+    padding-bottom: 2px;
+}
+
+.focus-chart-bar {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 2px;
+    border-radius: 3px 3px 0 0;
+    background: var(--accent);
+    opacity: 0.45;
+    transition: opacity 0.2s ease, height 0.3s ease;
+    cursor: default;
+}
+
+.focus-chart-bar:hover {
+    opacity: 0.9;
+}
+
+.focus-chart-bar.empty {
+    background: var(--text-secondary);
+    opacity: 0.2;
+}
+
+.focus-chart-bar.today {
+    opacity: 1;
+}
+
+/* --- Export row --- */
+.focus-export-row {
+    display: flex;
+    gap: 0.35rem;
+}
+
+.focus-mini-btn {
+    flex: 1 1 0;
+    padding: 0.4rem 0.2rem;
+    border: 1px solid var(--widget-border);
+    border-radius: 2rem;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.focus-mini-btn:hover {
+    color: var(--accent-hover);
+    border-color: var(--accent);
+    background: var(--btn-hover-bg);
+}
+
+.focus-mini-danger {
+    flex: 0 0 auto;
+    padding: 0.4rem 0.7rem;
+}
+
+.focus-mini-danger:hover,
+.focus-mini-danger.armed {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.12);
+}
+
 /* ================================================================
    RESPONSIVENESS
    ================================================================ */
@@ -1738,8 +2046,9 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
         height: 1.1rem;
     }
 
-    /* Panels become near-full-width */
-    .panel {
+    /* Panels become near-full-width (focus panel excluded — it moves to the
+       top of the screen so it can stay open alongside them) */
+    .panel:not(.focus-panel) {
         left: 0.75rem !important;
         right: 0.75rem !important;
         transform: translateY(12px) scale(0.97) !important;
@@ -1747,8 +2056,30 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
         max-width: unset;
     }
 
-    .panel.visible {
+    .panel:not(.focus-panel).visible {
         transform: translateY(0) scale(1) !important;
+    }
+
+    /* Focus panel — top card, coexists with the wide bottom panels */
+    .focus-panel {
+        top: 5rem;
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: auto;
+        width: auto;
+        min-width: 0;
+        max-width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+        max-height: 62vh;
+        max-height: 62dvh;
+        overflow-y: auto;
+        z-index: 26;
+        transform: translateY(-12px) scale(0.97);
+    }
+
+    .focus-panel.visible {
+        transform: translateY(0) scale(1);
     }
 
     .dashboard[data-clock-pos="top"] {
@@ -1950,8 +2281,10 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
 
     /* ============================================================
        BOTTOM-SHEET PANELS
+       (the focus panel is excluded — it anchors to the TOP so it can
+        stay open while a bottom sheet is up)
        ============================================================ */
-    .panel {
+    .panel:not(.focus-panel) {
         left: 0 !important;
         right: 0 !important;
         bottom: 0 !important;
@@ -1972,7 +2305,7 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
     }
 
     /* Drag handle — visual swipe affordance */
-    .panel::before {
+    .panel:not(.focus-panel)::before {
         content: '';
         display: block;
         width: 40px;
@@ -1983,13 +2316,49 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
         flex-shrink: 0;
     }
 
-    .panel.visible {
+    .panel:not(.focus-panel).visible {
         transform: translateY(0) !important;
     }
 
     /* Panel being swiped — disable normal transition */
     .panel.swiping {
         transition: none !important;
+    }
+
+    /* ============================================================
+       FOCUS PANEL — top card on phones, coexists with bottom sheets
+       ============================================================ */
+    .focus-panel {
+        top: 4.2rem;
+        left: 0.6rem;
+        right: 0.6rem;
+        bottom: auto;
+        width: auto;
+        min-width: 0;
+        max-height: 68vh;
+        max-height: 68dvh;
+        overflow-y: auto;
+        padding: 1rem 1.1rem;
+        border-radius: 1.1rem;
+        z-index: 26;
+        transform: translateY(-12px) scale(0.97);
+    }
+
+    .focus-panel.visible {
+        transform: translateY(0) scale(1);
+    }
+
+    /* extra specificity — the generic mobile .timer-display rule sits later */
+    .focus-panel .focus-display {
+        font-size: 2.1rem;
+    }
+
+    .focus-interrupt-btn {
+        min-height: 40px;
+    }
+
+    .focus-mini-btn {
+        min-height: 34px;
     }
 
     /* Music panel specific tweaks */
