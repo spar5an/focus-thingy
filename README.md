@@ -14,7 +14,7 @@ A Firewatch-themed dashboard that runs as a webpage. Built to be used as a live 
 
 Everything saves to `localStorage`, so it survives a refresh.
 
-**Shortcuts** — `P` pomodoro · `S` stopwatch · `D` focus · `L` tasks · `B` briefing · `O` music · `T` theme · `M` move clock · `F` fullscreen · `Space` play/pause
+Controls are toolbar-only — there are no keyboard shortcuts, since as a background the page never holds keyboard focus. (Enter still adds a task or starts a focus session while you're typing in those boxes.)
 
 ---
 
