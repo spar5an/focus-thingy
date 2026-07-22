@@ -1,0 +1,11 @@
+# Claude Code local settings (machine-specific paths, not worth sharing)
+.claude/
+
+# Throwaway test harnesses generated during development
+*.test.html
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+.ipynb_checkpoints/
