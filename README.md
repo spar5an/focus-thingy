@@ -1,33 +1,27 @@
-![wp10531693-firewatch-4k-wallpapers](https://github.com/user-attachments/assets/e915c6b7-2a9a-4d10-8f37-f69fd8a21635)
-## 🏔️ Overview
+# Firewatch Dashboard
 
-Escape the noise. The **Firewatch Dashboard** transforms your browser into a tranquil lookout tower. Engineered for deep work, this dashboard blends a breathtaking aesthetic with robust productivity tools.
+A Firewatch-themed dashboard that runs as a webpage. Built to be used as a live desktop background on Linux, so it's a single static page with no build step and no dependencies — just open `index.html`.
 
-Whether you're managing a Pomodoro session or maintaining your daily Ranger Log, this workspace is defined by the mathematical beauty of focus:
+**What's on it**
 
-$$ \lim_{\text{distractions} \to 0} \left( \text{Productivity} \right) = \infty $$
+- Clock with 12/24h toggle, draggable anywhere on screen
+- Pomodoro timer and a stopwatch
+- Focus tracker — log deep-focus sessions, tally interruptions, export to CSV/JSON
+- Task list with subtasks
+- Daily briefing — write a note today, read it tomorrow
+- Firewatch and Hollow Knight soundtracks, plus a lofi radio stream
+- 20 swappable backgrounds
 
-## ✨ Features
+Everything saves to `localStorage`, so it survives a refresh.
 
-- **🍅 Enhanced Pomodoro Timer**: Fully customizable focus, short break, and long break intervals with sound notifications.
-- **🎵 Firewatch OST & Lofi Audio Player**: Seamlessly switch between the game's original soundtrack and a persistent Lofi radio stream. Complete with track management, progress bar, spacebar play/pause toggles, and volume controls.
-- **🕰️ Draggable Clock & UI**: Tweak and position your timeline where it best suits your workflow.
+**Shortcuts** — `P` pomodoro · `S` stopwatch · `D` focus · `L` tasks · `B` briefing · `O` music · `T` theme · `M` move clock · `F` fullscreen · `Space` play/pause
 
-## 🛠️ Built With
+---
 
-- **HTML5**: Semantic, accessible, and clean structural foundation.
-- **Vanilla CSS3**: Beautifully themed elements tailored to the Firewatch color palette alongside custom micro-animations.
-- **Vanilla JavaScript**: Zero dependencies. Handles DOM dragging logic, state persistence via `localStorage`, Pomodoro time-keeping, and audio streaming integration.
+This is spar5an. I couldn't be bothered to fork this from someone so I just made some changes and re-uploaded it so I could download it onto all my devices. I'm 70% sure the previous dude vibe coded it.
 
-## 🌲 Disclaimer
+Here's the og link: https://github.com/Cosmosynth/Firewatch-Clock-Trials
 
-This is a passion project and fan tribute. *Firewatch*, its aesthetic, and its Original Soundtrack are the property of Campo Santo / Valve.
+I added the Hollow Knight stuff, the focus tracker, the task list and the daily briefing.
 
------------------
-
-
-This is spar5an, I couldnt be bothered to fork this from someone so I just made some changes and re uploaded so I could download it onto all my devices, im 70% sure the previous dude vibe coded it
-Heres the og link https://github.com/Cosmosynth/Firewatch-Clock-Trials
-
-I added hollowknight stuff to it
-
+*Firewatch* and its soundtrack belong to Campo Santo / Valve. *Hollow Knight* and its soundtrack belong to Team Cherry. This is a fan project, not affiliated with either.

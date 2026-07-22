@@ -1,24 +1,6 @@
 
-/* =============================================================
-   WELCOME SCREEN
-   ============================================================= */
-const welcomeOverlay = document.getElementById('welcome-overlay');
-const alreadyVisited = sessionStorage.getItem('fw-visited');
-
-if (alreadyVisited) {
-    welcomeOverlay.classList.add('hidden');
-    welcomeOverlay.addEventListener('transitionend', () => {
-        welcomeOverlay.style.display = 'none';
-    }, { once: true });
-} else {
-    // Auto-dismiss welcome screen after 3 seconds
-    setTimeout(() => {
-        sessionStorage.setItem('fw-visited', '1');
-        welcomeOverlay.classList.add('hidden');
-        setTimeout(() => { welcomeOverlay.style.display = 'none'; }, 900);
-    }, 3000);
-}
-
+/* Welcome splash removed — it fired once per browser session, which as a
+   desktop background meant a 3-second overlay on every login. */
 
 /* =============================================================
    CLOCK
@@ -186,12 +168,43 @@ const panels = {
     music: document.getElementById('music-panel'),
 };
 
-/* The focus panel is deliberately NOT in `panels` — it is allowed to stay
-   open alongside any of the mutually-exclusive panels above. */
+/* Persistent panels are deliberately NOT in `panels` — each may stay open
+   alongside the mutually-exclusive panels above, and alongside each other.
+   Desktop gives them their own slots: focus bottom-left, tasks bottom-right,
+   briefing top-right. `sheetOnMobile` marks the ones that fall back to a
+   bottom sheet on phones, where three panels cannot coexist. */
+const persistentPanels = {
+    focus: { el: document.getElementById('focus-panel'), btn: document.getElementById('btn-focus'), sheetOnMobile: false },
+    tasks: { el: document.getElementById('tasks-panel'), btn: document.getElementById('btn-tasks'), sheetOnMobile: true },
+    briefing: { el: document.getElementById('briefing-panel'), btn: document.getElementById('btn-briefing'), sheetOnMobile: true },
+};
+
 function closeAllPanels() {
     Object.values(panels).forEach(p => p.classList.remove('visible'));
-    document.querySelectorAll('.toolbar-btn:not(#btn-focus)').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.toolbar-btn:not(.persistent-toggle)').forEach(b => b.classList.remove('active'));
     document.body.classList.remove('panel-open');
+}
+
+function setPersistentPanel(name, visible) {
+    const p = persistentPanels[name];
+    if (!p) return;
+    p.el.classList.toggle('visible', visible);
+    p.btn.classList.toggle('active', visible);
+}
+
+function togglePersistentPanel(name, force) {
+    const p = persistentPanels[name];
+    if (!p) return;
+    const visible = typeof force === 'boolean' ? force : !p.el.classList.contains('visible');
+    setPersistentPanel(name, visible);
+
+    // Below the tablet breakpoint these render as full-width sheets, so only
+    // one may be open at a time (see the max-width 768px rules in style.css)
+    if (visible && p.sheetOnMobile && window.innerWidth <= 768) {
+        Object.keys(persistentPanels).forEach(other => {
+            if (other !== name && persistentPanels[other].sheetOnMobile) setPersistentPanel(other, false);
+        });
+    }
 }
 
 function togglePanel(name) {
@@ -212,6 +225,9 @@ function togglePanel(name) {
 document.getElementById('btn-pomodoro').addEventListener('click', () => togglePanel('pomodoro'));
 document.getElementById('btn-stopwatch').addEventListener('click', () => togglePanel('stopwatch'));
 document.getElementById('btn-music').addEventListener('click', () => togglePanel('music'));
+Object.keys(persistentPanels).forEach(name => {
+    persistentPanels[name].btn.addEventListener('click', () => togglePersistentPanel(name));
+});
 
 /* --- Close panels on tap outside / tap overlay --- */
 document.addEventListener('click', (e) => {
@@ -231,23 +247,31 @@ document.addEventListener('click', (e) => {
     let isDragging = false;
     const THRESHOLD = 80; // px to trigger dismiss
 
-    function getVisiblePanel() {
-        // Focus panel is a top-anchored card on mobile — never swipe-dismissed
-        return document.querySelector('.panel.visible:not(.focus-panel)');
+    /* Several sheets can be visible at once, so pick the one actually under the
+       finger — last in DOM order wins, matching the stacking order. The focus
+       panel is a top-anchored card on mobile and is never swipe-dismissed. */
+    function getPanelUnder(touch) {
+        const candidates = [...document.querySelectorAll('.panel.visible:not(.focus-panel)')].reverse();
+        return candidates.find(p => {
+            const r = p.getBoundingClientRect();
+            return touch.clientX >= r.left && touch.clientX <= r.right &&
+                   touch.clientY >= r.top && touch.clientY <= r.bottom;
+        }) || null;
     }
 
     document.addEventListener('touchstart', (e) => {
         // Only on mobile-width screens
         if (window.innerWidth > 480) return;
-        const panel = getVisiblePanel();
-        if (!panel) return;
 
         // Only start drag if touch is on the panel itself (not on interactive children deep inside)
         const touch = e.touches[0];
         const target = e.target;
 
-        // Touches on the focus panel must never drag the sheet underneath it
+        // Touches on the focus panel must never drag a sheet underneath it
         if (target.closest('.focus-panel')) return;
+
+        const panel = getPanelUnder(touch);
+        if (!panel) return;
 
         // Allow drag from the panel drag-handle area (top ~40px) or panel background
         const panelRect = panel.getBoundingClientRect();
@@ -286,13 +310,18 @@ document.addEventListener('click', (e) => {
         panelEl.classList.remove('swiping');
 
         if (isDragging && dy > THRESHOLD) {
-            // Dismiss — animate out then close
-            panelEl.style.transition = 'transform 0.3s cubic-bezier(.4,0,.2,1)';
-            panelEl.style.transform = 'translateY(100%)';
+            // Dismiss — animate out then close. Persistent panels survive
+            // closeAllPanels(), so hide the swiped one explicitly.
+            const swiped = panelEl;
+            const persistentName = Object.keys(persistentPanels)
+                .find(n => persistentPanels[n].el === swiped);
+            swiped.style.transition = 'transform 0.3s cubic-bezier(.4,0,.2,1)';
+            swiped.style.transform = 'translateY(100%)';
             setTimeout(() => {
-                closeAllPanels();
-                panelEl.style.transition = '';
-                panelEl.style.transform = '';
+                if (persistentName) togglePersistentPanel(persistentName, false);
+                else closeAllPanels();
+                swiped.style.transition = '';
+                swiped.style.transform = '';
                 panelEl = null;
             }, 300);
         } else {
@@ -937,14 +966,23 @@ ostProgressBar.addEventListener('mousedown', (e) => {
 window.addEventListener('mousemove', (e) => { if (ostSeeking) seekFromEvent(e); });
 window.addEventListener('mouseup', () => { ostSeeking = false; });
 
-// Volume
-ostAudio.volume = parseInt(volumeSlider.value) / 100;
-volumeSlider.addEventListener('input', () => {
+// Volume — applied to both players so switching modes doesn't jump in loudness
+function applyVolume() {
     const vol = parseInt(volumeSlider.value) / 100;
     ostAudio.volume = vol;
-    if (typeof lofiAudio !== 'undefined') {
-        lofiAudio.volume = vol;
-    }
+    lofiAudio.volume = vol;
+}
+volumeSlider.addEventListener('input', applyVolume);
+
+// A missing or unreadable track shouldn't fail silently
+ostAudio.addEventListener('error', () => {
+    if (!ostAudio.getAttribute('src')) return;   // ignore the empty-src case
+    console.warn('Track failed to load:', ostAudio.src);
+    ostTrackName.textContent = 'Track unavailable';
+    ostIsPlaying = false;
+    ostPlayIcon.innerHTML = PLAY_SVG;
+    ostMusicBars.forEach(b => b.classList.remove('playing'));
+    lofiWidget.classList.remove('playing');
 });
 
 /* =============================================================
@@ -955,9 +993,6 @@ const LOFI_STATIONS = [
     { title: "Laut.FM | Lofi 24/7", file: "https://lofi.stream.laut.fm/lofi" },
     { title: "Zeno FM | Study Lofi", file: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
     { title: "Zeno FM | Chill Beats", file: "https://stream.zeno.fm/0r0xa792kwzuv" },
-    { title: "Zeno FM | Lofi Hip Hop", file: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
-    { title: "Zeno FM | Box Lofi", file: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
-    { title: "Zeno FM | The Bootleg Boy", file: "https://stream.zeno.fm/0r0xa792kwzuv" },
     { title: "Fastcast4u | Chill Lofi", file: "http://usa9.fastcast4u.com/proxy/jamz?mp=/1" },
     { title: "FluxFM | Chillhop", file: "https://channels.fluxfm.de/chillhop/externalembedflxhp/stream.mp3" },
     { title: "Nightride FM | Chillsynth (Hi-Res AAC)", file: "https://stream.nightride.fm/chillsynth.m4a" },
@@ -975,7 +1010,11 @@ const LOFI_STATIONS = [
 
 let lofiCurrentIndex = 0;
 const lofiAudio = new Audio(LOFI_STATIONS[lofiCurrentIndex].file);
-lofiAudio.crossOrigin = "anonymous";
+/* No crossOrigin: it is only needed to read samples via Web Audio, which this
+   player never does (the visualiser is CSS). Setting it made the browser
+   require Access-Control-Allow-Origin, which most Icecast/Shoutcast radio
+   servers do not send — so the stream simply failed to load. */
+lofiAudio.preload = 'none';   // don't open a connection until asked to play
 let lofiIsPlaying = false;
 let musicMode = 'ost'; // 'ost', 'lofi', or 'hollow-knight'
 
@@ -989,11 +1028,38 @@ const lofiTrackName = document.getElementById('lofi-track-name');
 const lofiTrackNameDup = document.getElementById('lofi-track-name-dup'); // The duplicate span for looping
 const musicPanelTitle = document.getElementById('music-panel-title');
 
+// Both players start at the slider's value — otherwise the radio played at
+// 100% while the OST was at 60%, a jump every time you switched modes.
+applyVolume();
+
 // Helper to update both spans for the seamless marquee
 function updateTrackNameDisplay(text) {
     if (lofiTrackName) lofiTrackName.textContent = text;
     if (lofiTrackNameDup) lofiTrackNameDup.textContent = text;
 }
+
+/* A radio stream can 404 up front or simply die mid-play. Without this the UI
+   sat on "Live Now" forever with silence. Report it, and offer the next one. */
+lofiAudio.addEventListener('error', () => {
+    if (!lofiAudio.getAttribute('src')) return;
+    console.warn('Lofi stream failed:', lofiAudio.src);
+    lofiIsPlaying = false;
+    lofiWidget.classList.remove('playing');
+    ostMusicBars.forEach(b => b.classList.remove('playing'));
+    if (musicMode === 'lofi') {
+        ostPlayIcon.innerHTML = PLAY_SVG;
+        lofiStatusText.textContent = 'Stream Offline';
+        updateTrackNameDisplay(`${LOFI_STATIONS[lofiCurrentIndex].title} is unavailable — try another station`);
+    }
+});
+
+// Dropped connection mid-listen: the element stalls rather than erroring
+lofiAudio.addEventListener('stalled', () => {
+    if (musicMode === 'lofi' && lofiIsPlaying) lofiStatusText.textContent = 'Reconnecting…';
+});
+lofiAudio.addEventListener('playing', () => {
+    if (musicMode === 'lofi') lofiStatusText.textContent = 'Live Now';
+});
 
 // --- Build Lofi track list UI ---
 LOFI_STATIONS.forEach((station, idx) => {
@@ -1274,30 +1340,8 @@ function animateParticles() {
 }
 animateParticles();
 
-/* =============================================================
-   KEYBOARD SHORTCUTS (bonus feature)
-   ============================================================= */
-document.addEventListener('keydown', (e) => {
-    // Never fire shortcuts while typing in a field — otherwise "t" cycles the
-    // theme, "s" opens the stopwatch, etc. while entering a focus label.
-    const tag = document.activeElement && document.activeElement.tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
-
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
-
-    if (e.key === 't' || e.key === 'T') document.getElementById('btn-theme').click();
-    if (e.key === 'm' || e.key === 'M') document.getElementById('btn-clock-pos').click();
-    if (e.key === 'p' || e.key === 'P') togglePanel('pomodoro');
-    if (e.key === 's' || e.key === 'S') togglePanel('stopwatch');
-    if (e.key === 'o' || e.key === 'O') togglePanel('music');
-    if (e.key === 'd' || e.key === 'D') toggleFocusPanel();
-    if (e.key === 'f' || e.key === 'F') document.getElementById('btn-fullscreen').click();
-    // Spacebar toggles play/pause
-    if (e.key === ' ') {
-        e.preventDefault();
-        ostPlayBtn.click();
-    }
-});
+/* Keyboard shortcuts removed — as a desktop background this page never holds
+   keyboard focus, so every binding was dead code. Use the toolbar instead. */
 
 /* =============================================================
    FULLSCREEN TOGGLE
@@ -1698,15 +1742,8 @@ function clearFocusHistory() {
     syncFocusUI();
 }
 
-/* --- Panel toggle — independent of the mutually-exclusive panels --- */
-function toggleFocusPanel(force) {
-    const visible = typeof force === 'boolean' ? force : !focusPanel.classList.contains('visible');
-    focusPanel.classList.toggle('visible', visible);
-    btnFocus.classList.toggle('active', visible);
-}
-
-btnFocus.addEventListener('click', () => toggleFocusPanel());
-document.getElementById('focus-close').addEventListener('click', () => toggleFocusPanel(false));
+/* Panel visibility is handled by the shared persistent-panel registry above */
+document.getElementById('focus-close').addEventListener('click', () => togglePersistentPanel('focus', false));
 focusStartBtn.addEventListener('click', startFocus);
 focusStopBtn.addEventListener('click', stopFocus);
 focusInterruptBtn.addEventListener('click', markInterruption);
@@ -1717,6 +1754,431 @@ focusClearBtn.addEventListener('click', clearFocusHistory);
 // Enter in the label field starts the session
 focusLabelInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { e.preventDefault(); startFocus(); }
+});
+
+/* =============================================================
+   TASKS
+   Nested one level deep: a task owns subtasks. Ticking a parent
+   ticks its subtasks; a parent auto-completes when they all are.
+   ============================================================= */
+const TASKS_KEY = 'fw-tasks-v1';
+
+const taskListEl = document.getElementById('task-list');
+const taskEmptyEl = document.getElementById('task-empty');
+const taskInput = document.getElementById('task-input');
+const taskCountEl = document.getElementById('task-count');
+const taskClearDoneBtn = document.getElementById('task-clear-done');
+
+let taskStore = { version: 1, tasks: [] };
+let taskStorageOK = true;
+let taskEditingId = null;   // id of the task/subtask currently being renamed
+
+const CHECK_SVG = '<svg viewBox="0 0 24 24"><polyline points="4 12 9 17 20 6"/></svg>';
+const PLUS_SVG = '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+const CROSS_SVG = '<svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>';
+
+function loadTaskStore() {
+    try {
+        const raw = localStorage.getItem(TASKS_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.tasks)) {
+            taskStore = {
+                version: 1,
+                tasks: parsed.tasks.filter(t => t && typeof t.text === 'string').map(t => ({
+                    id: t.id || `t${Math.floor(t.created || 0)}`,
+                    text: t.text,
+                    done: !!t.done,
+                    created: t.created || 0,
+                    completedAt: typeof t.completedAt === 'number' ? t.completedAt : null,
+                    subtasks: (Array.isArray(t.subtasks) ? t.subtasks : [])
+                        .filter(s => s && typeof s.text === 'string')
+                        .map(s => ({
+                            id: s.id || `s${Math.floor(s.created || 0)}`,
+                            text: s.text,
+                            done: !!s.done,
+                            created: s.created || 0,
+                            completedAt: typeof s.completedAt === 'number' ? s.completedAt : null,
+                        })),
+                })),
+            };
+        }
+    } catch (e) {
+        console.warn('Task list unavailable, running in memory:', e);
+        taskStorageOK = false;
+    }
+}
+
+function saveTaskStore() {
+    if (!taskStorageOK) return;
+    try {
+        localStorage.setItem(TASKS_KEY, JSON.stringify(taskStore));
+    } catch (e) {
+        console.warn('Task list could not be saved:', e);
+        taskStorageOK = false;
+    }
+}
+
+let taskIdCounter = 0;
+function newTaskId(prefix) {
+    return `${prefix}${Date.now().toString(36)}${(taskIdCounter++).toString(36)}`;
+}
+
+/* --- Lookup --- */
+function findTask(id) {
+    for (const t of taskStore.tasks) {
+        if (t.id === id) return { task: t, parent: null };
+        const sub = t.subtasks.find(s => s.id === id);
+        if (sub) return { task: sub, parent: t };
+    }
+    return null;
+}
+
+/* --- Mutations --- */
+function addTask(text) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    taskStore.tasks.push({
+        id: newTaskId('t'), text: trimmed, done: false,
+        created: Date.now(), completedAt: null, subtasks: [],
+    });
+    saveTaskStore();
+    renderTasks();
+}
+
+function addSubtask(parentId, text) {
+    const hit = findTask(parentId);
+    if (!hit || hit.parent) return;   // only one level of nesting
+    const trimmed = (text || '').trim();
+    hit.task.subtasks.push({
+        id: newTaskId('s'), text: trimmed || 'New subtask', done: false,
+        created: Date.now(), completedAt: null,
+    });
+    // Adding work to a finished task reopens it
+    if (hit.task.done) { hit.task.done = false; hit.task.completedAt = null; }
+    saveTaskStore();
+    renderTasks();
+}
+
+function toggleTaskDone(id) {
+    const hit = findTask(id);
+    if (!hit) return;
+    const now = Date.now();
+    const next = !hit.task.done;
+    hit.task.done = next;
+    hit.task.completedAt = next ? now : null;
+
+    if (!hit.parent) {
+        // Ticking a parent ticks everything under it
+        hit.task.subtasks.forEach(s => { s.done = next; s.completedAt = next ? now : null; });
+    } else {
+        // A parent completes exactly when all its subtasks are done
+        const p = hit.parent;
+        const all = p.subtasks.length > 0 && p.subtasks.every(s => s.done);
+        p.done = all;
+        p.completedAt = all ? now : null;
+    }
+    saveTaskStore();
+    renderTasks();
+}
+
+function deleteTask(id) {
+    const hit = findTask(id);
+    if (!hit) return;
+    if (hit.parent) hit.parent.subtasks = hit.parent.subtasks.filter(s => s.id !== id);
+    else taskStore.tasks = taskStore.tasks.filter(t => t.id !== id);
+    saveTaskStore();
+    renderTasks();
+}
+
+function renameTask(id, text) {
+    const hit = findTask(id);
+    if (!hit) return;
+    const trimmed = text.trim();
+    if (trimmed) hit.task.text = trimmed;   // empty edit reverts rather than blanking
+    saveTaskStore();
+}
+
+function clearDoneTasks() {
+    taskStore.tasks.forEach(t => { t.subtasks = t.subtasks.filter(s => !s.done); });
+    taskStore.tasks = taskStore.tasks.filter(t => !t.done);
+    saveTaskStore();
+    renderTasks();
+}
+
+/* --- Render --- */
+function taskRow(item, isSub) {
+    const row = document.createElement('div');
+    row.className = 'task-item' + (isSub ? ' task-sub' : '') + (item.done ? ' done' : '');
+    row.dataset.id = item.id;
+
+    const check = document.createElement('button');
+    check.className = 'task-check';
+    check.type = 'button';
+    check.innerHTML = CHECK_SVG;
+    check.setAttribute('aria-label', item.done ? 'Mark as not done' : 'Mark as done');
+    check.setAttribute('aria-pressed', String(item.done));
+    check.addEventListener('click', () => toggleTaskDone(item.id));
+    row.appendChild(check);
+
+    if (taskEditingId === item.id) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'task-edit-input';
+        input.value = item.text;
+        input.maxLength = 200;
+        let committed = false;
+        const commit = (save) => {
+            if (committed) return;
+            committed = true;
+            if (save) renameTask(item.id, input.value);
+            taskEditingId = null;
+            renderTasks();
+        };
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); commit(true); }
+            if (e.key === 'Escape') { e.preventDefault(); commit(false); }
+        });
+        input.addEventListener('blur', () => commit(true));
+        row.appendChild(input);
+        // focus after it is in the document
+        requestAnimationFrame(() => { input.focus(); input.select(); });
+    } else {
+        const text = document.createElement('span');
+        text.className = 'task-text';
+        text.textContent = item.text;
+        text.title = 'Click to edit';
+        text.addEventListener('click', () => { taskEditingId = item.id; renderTasks(); });
+        row.appendChild(text);
+
+        if (!isSub && item.subtasks.length) {
+            const prog = document.createElement('span');
+            prog.className = 'task-progress';
+            prog.textContent = `${item.subtasks.filter(s => s.done).length}/${item.subtasks.length}`;
+            row.appendChild(prog);
+        }
+    }
+
+    const actions = document.createElement('div');
+    actions.className = 'task-actions';
+    if (!isSub) {
+        const addSub = document.createElement('button');
+        addSub.className = 'task-btn';
+        addSub.type = 'button';
+        addSub.innerHTML = PLUS_SVG;
+        addSub.title = 'Add subtask';
+        addSub.setAttribute('aria-label', 'Add subtask');
+        addSub.addEventListener('click', () => {
+            addSubtask(item.id, '');
+            const last = item.subtasks[item.subtasks.length - 1];
+            if (last) { taskEditingId = last.id; renderTasks(); }
+        });
+        actions.appendChild(addSub);
+    }
+    const del = document.createElement('button');
+    del.className = 'task-btn task-del';
+    del.type = 'button';
+    del.innerHTML = CROSS_SVG;
+    del.title = isSub ? 'Delete subtask' : 'Delete task';
+    del.setAttribute('aria-label', isSub ? 'Delete subtask' : 'Delete task');
+    del.addEventListener('click', () => deleteTask(item.id));
+    actions.appendChild(del);
+    row.appendChild(actions);
+
+    return row;
+}
+
+function renderTasks() {
+    taskListEl.innerHTML = '';
+
+    taskStore.tasks.forEach(t => {
+        taskListEl.appendChild(taskRow(t, false));
+        if (t.subtasks.length) {
+            const wrap = document.createElement('div');
+            wrap.className = 'task-subs';
+            t.subtasks.forEach(s => wrap.appendChild(taskRow(s, true)));
+            taskListEl.appendChild(wrap);
+        }
+    });
+
+    const hasTasks = taskStore.tasks.length > 0;
+    taskEmptyEl.style.display = hasTasks ? 'none' : '';
+    taskListEl.style.display = hasTasks ? '' : 'none';
+
+    // Count every leaf: standalone tasks plus all subtasks
+    let total = 0, done = 0;
+    taskStore.tasks.forEach(t => {
+        if (t.subtasks.length) {
+            total += t.subtasks.length;
+            done += t.subtasks.filter(s => s.done).length;
+        } else {
+            total++;
+            if (t.done) done++;
+        }
+    });
+    taskCountEl.textContent = total ? `${done} of ${total} done` : 'No tasks';
+
+    const anyDone = taskStore.tasks.some(t => t.done || t.subtasks.some(s => s.done));
+    taskClearDoneBtn.disabled = !anyDone;
+    taskClearDoneBtn.style.opacity = anyDone ? '' : '0.35';
+}
+
+function exportTasks() {
+    downloadFocusFile(JSON.stringify(taskStore, null, 2),
+        `tasks-${fmtFocusDate(new Date())}.json`, 'application/json');
+}
+
+document.getElementById('task-add-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    addTask(taskInput.value);
+    taskInput.value = '';
+    taskInput.focus();
+});
+document.getElementById('tasks-close').addEventListener('click', () => togglePersistentPanel('tasks', false));
+taskClearDoneBtn.addEventListener('click', clearDoneTasks);
+document.getElementById('task-export').addEventListener('click', exportTasks);
+
+/* =============================================================
+   DAILY BRIEFING
+   A single rolling note: what you write today becomes tomorrow's
+   briefing, which is then shown to you and cleared from the box.
+   ============================================================= */
+const BRIEFING_KEY = 'fw-briefing-v1';
+const BRIEFING_SAVE_DELAY = 500;
+
+const briefingInput = document.getElementById('briefing-input');
+const briefingTodayEl = document.getElementById('briefing-today');
+const briefingTodayLabel = document.getElementById('briefing-today-label');
+const briefingTodayBody = document.getElementById('briefing-today-body');
+const briefingWrittenEl = document.getElementById('briefing-written');
+const briefingForLabel = document.getElementById('briefing-for-label');
+const briefingStatusEl = document.getElementById('briefing-status');
+
+let briefingStore = { version: 1, current: null, pending: null };
+let briefingStorageOK = true;
+let briefingSaveTimer = null;
+let briefingStatusTimer = null;
+
+function dayKey(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function tomorrowKey() {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return dayKey(d);
+}
+
+function prettyDay(key) {
+    const [y, m, d] = key.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString(undefined,
+        { weekday: 'short', day: 'numeric', month: 'short' });
+}
+
+function loadBriefingStore() {
+    try {
+        const raw = localStorage.getItem(BRIEFING_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+            const clean = (n) => (n && typeof n.text === 'string' && typeof n.forDate === 'string')
+                ? { text: n.text, forDate: n.forDate, writtenOn: n.writtenOn || n.forDate }
+                : null;
+            briefingStore = { version: 1, current: clean(parsed.current), pending: clean(parsed.pending) };
+        }
+    } catch (e) {
+        console.warn('Briefing unavailable, running in memory:', e);
+        briefingStorageOK = false;
+    }
+}
+
+function saveBriefingStore() {
+    if (!briefingStorageOK) return;
+    try {
+        localStorage.setItem(BRIEFING_KEY, JSON.stringify(briefingStore));
+    } catch (e) {
+        console.warn('Briefing could not be saved:', e);
+        briefingStorageOK = false;
+    }
+}
+
+/* Promote a pending note once its date arrives. Returns true if anything moved,
+   so the caller can re-render. Runs on load and on a timer, because the
+   dashboard is typically left open across midnight. */
+function promoteBriefingIfDue() {
+    const today = dayKey(new Date());
+    const p = briefingStore.pending;
+    if (p && p.forDate <= today) {
+        briefingStore.current = p;
+        briefingStore.pending = null;
+        saveBriefingStore();
+        return true;
+    }
+    return false;
+}
+
+function renderBriefing() {
+    const today = dayKey(new Date());
+    const cur = briefingStore.current;
+
+    if (cur && cur.text.trim()) {
+        briefingTodayEl.classList.remove('empty');
+        briefingTodayLabel.textContent = cur.forDate === today
+            ? `Today · ${prettyDay(today)}`
+            : `From ${prettyDay(cur.forDate)}`;
+        briefingWrittenEl.textContent = `written ${prettyDay(cur.writtenOn)}`;
+        briefingTodayBody.textContent = cur.text;
+    } else {
+        briefingTodayEl.classList.add('empty');
+        briefingTodayLabel.textContent = `Today · ${prettyDay(today)}`;
+        briefingWrittenEl.textContent = '';
+        briefingTodayBody.textContent = 'No briefing waiting for you today. Write one below and it will be here tomorrow.';
+    }
+
+    const forDate = briefingStore.pending ? briefingStore.pending.forDate : tomorrowKey();
+    briefingForLabel.textContent = prettyDay(forDate);
+
+    // Don't clobber what is being typed
+    if (document.activeElement !== briefingInput) {
+        briefingInput.value = briefingStore.pending ? briefingStore.pending.text : '';
+    }
+}
+
+function showBriefingStatus(text) {
+    briefingStatusEl.textContent = text;
+    briefingStatusEl.classList.add('show');
+    clearTimeout(briefingStatusTimer);
+    briefingStatusTimer = setTimeout(() => briefingStatusEl.classList.remove('show'), 1600);
+}
+
+function commitBriefingDraft() {
+    const text = briefingInput.value;
+    if (text.trim()) {
+        briefingStore.pending = { text, forDate: tomorrowKey(), writtenOn: dayKey(new Date()) };
+    } else {
+        briefingStore.pending = null;
+    }
+    saveBriefingStore();
+    showBriefingStatus('Saved');
+    briefingForLabel.textContent = prettyDay(tomorrowKey());
+}
+
+briefingInput.addEventListener('input', () => {
+    clearTimeout(briefingSaveTimer);
+    briefingSaveTimer = setTimeout(commitBriefingDraft, BRIEFING_SAVE_DELAY);
+});
+briefingInput.addEventListener('blur', () => {
+    clearTimeout(briefingSaveTimer);
+    commitBriefingDraft();
+});
+document.getElementById('briefing-close').addEventListener('click', () => togglePersistentPanel('briefing', false));
+document.getElementById('briefing-clear').addEventListener('click', () => {
+    briefingStore.current = null;
+    briefingStore.pending = null;
+    briefingInput.value = '';
+    saveBriefingStore();
+    renderBriefing();
+    showBriefingStatus('Cleared');
 });
 
 /* --- Boot --- */
@@ -1737,4 +2199,20 @@ focusLabelInput.addEventListener('keydown', (e) => {
     }
 
     syncFocusUI();
+})();
+
+(function initTasks() {
+    loadTaskStore();
+    renderTasks();
+})();
+
+(function initBriefing() {
+    loadBriefingStore();
+    promoteBriefingIfDue();
+    renderBriefing();
+
+    // The dashboard is often left running overnight — pick up the day turn
+    setInterval(() => {
+        if (promoteBriefingIfDue()) renderBriefing();
+    }, 60000);
 })();
