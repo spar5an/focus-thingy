@@ -6,6 +6,12 @@
     --font-body: 'Inter', sans-serif;
     --font-handwritten: 'Caveat', cursive;
     --transition-theme: 0.6s ease;
+
+    /* Gap between the bottom edge and the toolbar / clock-format controls.
+       Raised so a Linux taskbar/panel at the bottom of the screen doesn't
+       cover them. Bump this if your bar is taller (e.g. 6rem or 7rem);
+       drop it back toward 2rem if you have no bottom bar. */
+    --dock-gap: 5rem;
 }
 
 /* ---------- SUNSET ---------- */
@@ -666,7 +672,7 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
    ================================================================ */
 .toolbar {
     position: fixed;
-    bottom: 2rem;
+    bottom: var(--dock-gap);
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -1101,7 +1107,7 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
 /* Centred alongside Pomodoro/Stopwatch — the bottom-right slot belongs to
    the Tasks panel, which stays open while music plays. */
 .music-panel {
-    bottom: 5.5rem;
+    bottom: calc(var(--dock-gap) + 3.5rem);
     left: 50%;
     min-width: 300px;
     max-width: 340px;
@@ -1563,7 +1569,7 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
    PANEL POSITIONS
    ================================================================ */
 .pomodoro-panel {
-    bottom: 5.5rem;
+    bottom: calc(var(--dock-gap) + 3.5rem);
     left: 50%;
     transform: translateX(-50%) translateY(12px) scale(0.97);
 }
@@ -1573,7 +1579,7 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
 }
 
 .stopwatch-panel {
-    bottom: 5.5rem;
+    bottom: calc(var(--dock-gap) + 3.5rem);
     left: 50%;
     transform: translateX(-50%) translateY(12px) scale(0.97);
 }
@@ -1595,18 +1601,18 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
     box-sizing: border-box;
     width: 320px;
     min-width: 320px;
-    max-height: calc(100vh - 13rem);
-    max-height: calc(100dvh - 13rem);
+    max-height: calc(100vh - var(--dock-gap) - 11rem);
+    max-height: calc(100dvh - var(--dock-gap) - 11rem);
     overflow-y: auto;
 }
 
 .focus-panel {
-    bottom: 5.5rem;
+    bottom: calc(var(--dock-gap) + 3.5rem);
     left: 1.5rem;
 }
 
 .tasks-panel {
-    bottom: 5.5rem;
+    bottom: calc(var(--dock-gap) + 3.5rem);
     right: 1.5rem;
     display: flex;
     flex-direction: column;
@@ -1628,8 +1634,8 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
    screens they are stacked sheets instead. */
 @media (min-width: 769px) {
     body:has(.briefing-panel.visible) .tasks-panel {
-        max-height: calc(100vh - 42vh - 13.5rem);
-        max-height: calc(100dvh - 42dvh - 13.5rem);
+        max-height: calc(100vh - 42vh - var(--dock-gap) - 11.5rem);
+        max-height: calc(100dvh - 42dvh - var(--dock-gap) - 11.5rem);
     }
 }
 
@@ -2539,16 +2545,6 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
         margin: 0 0.1rem;
     }
 
-    /* ============================================================
-       SHOW FULLSCREEN ON PHONES & STACK
-       ============================================================ */
-    .fullscreen-btn {
-        display: flex;
-        width: 2.375rem; /* Match width of the 12/24 toggle including its padding */
-        height: 2.375rem;
-        border-radius: 10px;
-    }
-
     .bottom-right-controls {
         position: fixed;
         bottom: 5rem;
@@ -2771,55 +2767,16 @@ body[data-theme="hollow-radiance"] .bg-hollow-radiance {
 }
 
 /* ================================================================
-   BOTTOM-RIGHT CONTROLS (Fullscreen + 12/24h toggle)
+   BOTTOM-RIGHT CONTROLS (12/24h toggle)
    ================================================================ */
 .bottom-right-controls {
     position: fixed;
-    bottom: 2rem;
+    bottom: var(--dock-gap);
     right: 2rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     z-index: 10;
-}
-
-/* ---- Fullscreen Button ---- */
-.fullscreen-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.4rem;
-    height: 2.4rem;
-    border: 1px solid var(--widget-border);
-    border-radius: 10px;
-    background: var(--widget-bg);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease, transform 0.2s ease;
-    padding: 0;
-}
-
-.fullscreen-btn:hover {
-    color: var(--accent-hover);
-    border-color: var(--accent);
-    background: var(--btn-hover-bg);
-    transform: translateY(-1px);
-}
-
-.fullscreen-btn:active {
-    transform: translateY(0) scale(0.95);
-}
-
-.fullscreen-btn svg {
-    width: 1rem;
-    height: 1rem;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
 }
 
 /* ---- 12/24 HOUR TOGGLE ---- */
